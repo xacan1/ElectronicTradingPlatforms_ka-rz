@@ -526,6 +526,7 @@ def show_tender(url_post):
         else:
             form_tender = TenderForm()
 
+            # Уберем корректировку часового пояса на стороне сервера, так как все корректировки у нас на фронте
             # post_info['time_close'] = models.from_utc0_to_localtime(post_info['time_close'],
             #                                                         current_user.get('timezone'))
             # post_info['today'] = models.from_utc0_to_localtime(post_info['today'], current_user.get('timezone'))

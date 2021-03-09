@@ -1,0 +1,5 @@
+/.idea/
+/venv/
+/wsgi.py
+/etp.db
+/config.py
