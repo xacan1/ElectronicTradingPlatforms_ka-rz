@@ -44,3 +44,6 @@ caption{
 .hide-column{
     display: none;
 }
+tbody tr:hover,tbody tr:nth-child(even):hover{
+    background: #FFF7D1;
+}

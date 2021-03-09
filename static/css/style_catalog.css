@@ -36,3 +36,6 @@
 .selected-catalog a{
 	color: #FFF;
 }
+.no-background:hover{
+    background: #EEEEEE;
+}
