@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block style %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style_profile.css') }}" type="text/css">
+{% endblock %}
+
+{% block content %}
+{{ super() }}
+<div class="title-bar">
+    <div class="title-text">
+        <p>{{ title }}</p>
+    </div>
+</div>
+<section class="container">
+    <div class="block-users-list">
+        <table>
+            <caption>{{ title_page }}</caption>
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Пользователь</th>
+                <th>Эл почта</th>
+                <th>Организация</th>
+                <th>Учетная запись подтверждена</th>
+                <th>Ссылка на профиль</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for user in users %}
+            <tr>
+                <td>{{ user.id }}</td>
+                <td>{{ user.username }}</td>
+                <td>{{ user.email }}</td>
+                <td>{{ user.company }}</td>
+                <td>
+                    {% if user.confirmation_code %}
+                    <span>нет</span>
+                    {% else %}
+                    <span>да</span>
+                    {% endif %}
+                </td>
+                <td><a href="{{ url_for('profile', username=user.username) }}">Перейти в профиль</a></td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+{% endblock %}

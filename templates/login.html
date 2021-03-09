@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block style %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style_login.css') }}" type="text/css">
+{% endblock %}
+
+{% block content %}
+{{ super() }}
+<section class="container">
+    <div class="login-page">
+        <form class="login-form pure-form" action="{{ url_for('login') }}" method="post" novalidate>
+            {{ form.hidden_tag() }}
+            {% if form.username.errors -%}
+            <span class="invalid-feedback-text">
+                    {% for error in form.username.errors %}
+                    {{ error }}
+                    {% endfor %}
+            </span>
+            <p>{{ form.username(size=32, placeholder='Логин', class='invalid-feedback-field') }}</p>
+            {% else -%}
+            <p>{{ form.username(size=32, placeholder='Логин') }}</p>
+            {% endif -%}
+            {% if form.psw.errors -%}
+            <span class="invalid-feedback-text">
+                    {% for error in form.psw.errors -%}
+                    {{ error }}
+                    {% endfor -%}
+            </span>
+            <p>{{ form.psw(size=32, placeholder='Пароль', class='invalid-feedback-field') }}</p>
+            {% else -%}
+            <p>{{ form.psw(size=32, placeholder='Пароль') }}</p>
+            {% endif -%}
+            <div class="flash">
+                {% for cat, msg in get_flashed_messages(True) -%}
+                <p class="invalid-feedback-text">{{ msg }}</p>
+                {% endfor %}
+            </div>
+            <p>{{ form.submit(class='button-login') }}</p>
+            <p class="message">Не зарегистрированы? <a href="{{ url_for('registration') }}"><strong>Создать аккаунт</strong></a></p>
+            <p class="message">Забыли пароль? <a href="{{ url_for('password_recovery') }}"><strong>Восстановить доступ</strong></a></p>
+        </form>
+    </div>
+</section>
+{% endblock %}

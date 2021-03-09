@@ -1,0 +1,76 @@
+.container {
+  position: relative;
+  z-index: 1;
+  max-width: 500px;
+  margin: 0 auto;
+}
+.login-page,.password-change-page,.password-recovery-page {
+  width: 360px;
+  padding: 4% 0 0;
+  margin: auto;
+}
+.registration-page,.edit-profile-page {
+  width: 460px;
+  padding: 4% 0 0;
+  margin: auto;
+}
+.login-form,.registration-form,.password-change-form,.password-recovery-form,.edit-profile-form {
+  position: relative;
+  z-index: 1;
+  background: #FFFFFF;
+  max-width: 460px;
+  margin: 0 auto 5rem;
+  padding: 1rem 2rem 1rem 2rem;
+  text-align: center;
+  box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
+}
+input {
+  background: #f2f2f2;
+  width: 100%;
+  margin: 0 0 0.5rem 0;
+  padding: 0.5rem;
+  font-size: 1rem;
+}
+label {
+  color: #757575;
+}
+label, select{
+  outline: 0;
+  background: #f2f2f2;
+  margin: 0 0 0.5rem 0;
+  padding: 0.5rem;
+  border: 0;
+  box-sizing: border-box;
+  font-size: 1rem;
+}
+.button-login {
+  background: #4E5858;
+  text-transform: uppercase;
+  outline: 0;
+  width: 100%;
+  border: 0;
+  padding: 1rem;
+  color: #FFFFFF;
+  font-size: 1rem;
+  transition: background-color .2s linear;
+  cursor: pointer;
+  /*-webkit-transition: all 0.3 ease;*/
+  /*transition: all 0.3 ease;*/
+}
+.button-login:hover,.button-login:active,.button-login:focus {
+  background: #272727;
+}
+.message {
+  margin: 1rem 0 0;
+  color: #b3b3b3;
+  font-size: 1rem;
+}
+.message a {
+  color: #253D58;
+  text-decoration: none;
+}
+div.my-checkbox label{
+    display: inline-block;
+	cursor: pointer;
+	position: relative;
+}

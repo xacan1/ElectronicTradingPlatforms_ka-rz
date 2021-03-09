@@ -1,0 +1,44 @@
+.container {
+  position: relative;
+  z-index: 1;
+  /*max-width: 500px;*/
+  margin: 0 0 0 2%;
+}
+.add-edit-tender-page {
+  padding: 0;
+  margin: auto;
+}
+.login-form,.registration-form {
+  position: relative;
+  z-index: 1;
+  background: #FFFFFF;
+  max-width: 360px;
+  margin: 0 auto 5rem;
+  padding: 1rem 2rem 1rem 2rem;
+  text-align: center;
+  box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
+}
+#title_tender{
+  width: 100%;
+}
+.grid-block-data{
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: 1fr;
+  border: 1px solid #EEEEEE;
+}
+@media(max-width: 768px){
+    .grid-block-data{
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr 1fr 1fr;
+  }
+}
+.tender-goods{
+  padding: 0 0 1rem 0;
+}
+textarea,fieldset{
+  width: 100%;
+}
+.button-small{
+  font-size: 85%;
+}

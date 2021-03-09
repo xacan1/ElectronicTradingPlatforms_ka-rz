@@ -1,0 +1,203 @@
+html,body{
+    font-family: Arial, sans-serif;
+    font-size: 15px;
+    color: #697074;
+    background-color: white;
+    height: 100%;
+    width: 100%;
+    font-size: 100%;
+    line-height: 1;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    -ms-text-size-adjust: 100%;
+    -moz-text-size-adjust: 100%;
+    -webkit-text-size-adjust: 100%;
+}
+*,
+*:before,
+*:after{
+    box-sizing: border-box;
+}
+
+nav,header,main,footer,aside{display: block;}
+h1,h2,h3,h4,h5,h6{font-size: inherit;font-weight: 400;}
+ul li{list-style: none;}
+
+h2{
+    font-size: 1.2rem;
+}
+.text p{
+    font-size: .8rem;
+    line-height: 150%;
+}
+.text img{
+    min-width: 320px;
+    width: 100%;
+    height: 100%;
+}
+.title-text p{
+    font-size: 1.5rem;
+}
+.title-bar{
+    border-top: 1px outset #EEEEEF;
+    background-color: #FDFDFF;
+    border-bottom: 1px inset #EEEEEF;
+}
+ul li{
+    font-size: .8rem;
+    line-height: 150%;
+}
+.flash-error{
+    border: 1px solid #FF3707;
+    background-color: #CE5106;
+    transition: background-color .2s linear;
+    opacity: .5;
+    color: #000000;
+}
+.flash-success{
+    border: 1px solid #15FF59;
+    background-color: #609859;
+    transition: background-color .2s linear;
+    opacity: .5;
+    color: #000000;
+}
+.invalid-feedback-text{
+    font-size: 0.8rem;
+    color: #CC0000;
+    font-style: italic;
+}
+.invalid-feedback-field{
+    background: #FF9898;
+}
+a{
+    color: #697074;
+    text-decoration: none;
+}
+a:hover{
+    color: #0169D3;
+    text-decoration: underline;
+}
+.topbar{
+    text-align: left;
+    background-color: #FDFDFE;
+    padding: 10px 0 10px 23%;
+    font-size: 0.75rem;
+    border-bottom: 1px inset #EEEEEE;
+}
+.grid-site{
+    min-height: 100%;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: minmax(50px, auto) 1fr minmax(200px, auto);
+    grid-template-areas:
+        "header"
+        "main"
+        "footer";
+}
+.grid-header-menu{
+    grid-area: header;
+    display: grid;
+    grid-template-columns: 20% minmax(auto, 1200px) 20%;
+    grid-template-rows: 1fr;
+}
+.header-list{
+    display: grid;
+    grid-column: 2 / 3;
+    grid-auto-flow: column;
+    justify-items: center;
+    align-items: end;
+    gap: 1rem;
+}
+@media (max-width: 768px){
+    .grid-header-menu{
+        grid-area: header;
+        display: grid;
+        grid-template-columns: 1% minmax(auto, 768px) 1%;
+        grid-template-rows: 1fr;
+    }
+    .header-list{
+        display: grid;
+        grid-column: span 4;
+        grid-auto-flow: row;
+        align-items: center;
+        gap: 1rem;
+        padding: 0 20% 0 20%;
+    }
+}
+.header-logo{
+    width: 140px;
+    height: 70px;
+}
+.grid-content{
+    grid-area: main;
+    display: grid;
+    grid-template-columns: 20% minmax(auto, 1200px) 20%;
+    grid-template-rows: 1fr;
+}
+.content{
+    grid-column: 2 / 3;
+}
+@media (max-width: 768px){
+    .grid-content{
+        grid-area: main;
+        display: grid;
+        grid-template-columns: 1% minmax(auto, 768px) 1%;
+        grid-template-rows: 1fr;
+    }
+}
+.grid-footer{
+    grid-area: footer;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(auto, 256px));
+    grid-template-rows: 1fr 1rem;
+    align-items: end;
+    background-color: #272727;
+    font-size: 0.75rem;
+    line-height: 1.5;
+    color: #fff;
+    padding: 0 20% 0 20%;
+}
+.footer-map{
+    position: absolute;
+}
+@media (max-width: 768px){
+    .grid-footer{
+        grid-template-columns: repeat(2, minmax(auto, 256px));
+        padding: 0;
+    }
+    .footer-info-col1{
+        display: none;
+    }
+    .footer-map{
+        display: none;
+    }
+}
+.headline{
+    border-bottom: 2px solid #104990;
+    font-size: 1rem;
+}
+.footer_col{
+    padding: 3rem 0 3rem 1rem;
+    align-self: start;
+}
+.footer-info-col2 a{
+    color: #FFF;
+}
+.footer-copyright{
+    grid-column: span 3;
+    /*background-color: #222222;*/
+    text-align: center;
+}
+.button-small{
+    font-size: 85%;
+}
+.pure-button:hover{
+    cursor: pointer;
+}
+a.pure-button{
+    text-decoration: none;
+}
+.small-text{
+    font-size: .85rem;
+}

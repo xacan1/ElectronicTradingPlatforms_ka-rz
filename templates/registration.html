@@ -1,0 +1,124 @@
+{% extends 'base.html' %}
+
+{% block style %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style_login.css') }}" type="text/css">
+{% endblock %}
+
+{% block content %}
+{{ super() }}
+<section class="container">
+    <div class="registration-page">
+        <form class="registration-form pure-form" action="{{ url_for('registration') }}" method="post" novalidate>
+            {{ form.hidden_tag() }}
+            {% if form.username.errors -%}
+            <span class="invalid-feedback-text">
+                {% for error in form.username.errors -%}
+                {{ error }}
+                {% endfor -%}
+                </span>
+            <span>{{ form.username(size=32, placeholder='Логин', class='invalid-feedback-field') }}</span>
+            {% else -%}
+            <span>{{ form.username(size=32, placeholder='Логин') }}</span>
+            {% endif -%}
+
+            {% if form.email.errors -%}
+            <span class="invalid-feedback-text">
+                {% for error in form.email.errors -%}
+                {{ error }}
+                {% endfor -%}
+                </span>
+            <span>{{ form.email(size=32, placeholder='Email', class='invalid-feedback-field') }}</span>
+            {% else -%}
+            <span>{{ form.email(size=32, placeholder='Email') }}</span>
+            {% endif -%}
+
+            {% if form.phone.errors -%}
+            <span class="invalid-feedback-text">
+                {% for error in form.phone.errors -%}
+                {{ error }}
+                {% endfor -%}
+                </span>
+            <span>{{ form.phone(size=32, placeholder='Телефон', class='invalid-feedback-field') }}</span>
+            {% else -%}
+            <span>{{ form.phone(size=32, placeholder='Телефон') }}</span>
+            {% endif -%}
+
+            {% if form.company.errors -%}
+            <span class="invalid-feedback-text">
+                {% for error in form.company.errors -%}
+                {{ error }}
+                {% endfor %}
+                </span>
+            <span>{{ form.company(size=32, placeholder='Название компании или ФИО ИП', class='invalid-feedback-field')
+                    }}</span>
+            {% else -%}
+            <span>{{ form.company(size=32, placeholder='Название компании или ФИО ИП') }}</span>
+            {% endif -%}
+
+            {% if form.inn.errors -%}
+            <span class="invalid-feedback-text">
+                {% for error in form.inn.errors -%}
+                {{ error }}
+                {% endfor -%}
+                </span>
+            <span>{{ form.inn(size=32, placeholder='ИНН', class='invalid-feedback-field') }}</span>
+            {% else -%}
+            <span>{{ form.inn(size=32, placeholder='ИНН') }}</span>
+            {% endif -%}
+
+            {% if form.user_timezone.errors -%}
+            <span class="invalid-feedback-text">
+                {% for error in form.user_timezone.errors -%}
+                {{ error }}
+                {% endfor -%}
+                </span>
+            <p>{{ form.user_timezone.label() }} {{ form.user_timezone(class='invalid-feedback-field') }}</p>
+            {% else -%}
+            <p>{{ form.user_timezone.label() }} {{ form.user_timezone(id='user-timezone') }}</p>
+            {% endif -%}
+
+            {% if form.psw.errors %}
+            <span class="invalid-feedback-text">
+                {% for error in form.psw.errors -%}
+                {{ error }}
+                {% endfor -%}
+            </span>
+            <span>{{ form.psw(size=32, placeholder='Пароль', class='invalid-feedback-field') }}</span>
+            {% else -%}
+            <span>{{ form.psw(size=32, placeholder='Пароль') }}</span>
+            {% endif -%}
+
+            {% if form.repeat_psw.errors -%}
+            <span class="invalid-feedback-text">
+                {% for error in form.repeat_psw.errors -%}
+                {{ error }}
+                {% endfor -%}
+            </span>
+            <span>{{ form.repeat_psw(size=32, placeholder='Повторите пароль', class='invalid-feedback-field') }}</span>
+            {% else -%}
+            <span>{{ form.repeat_psw(size=32, placeholder='Повторите пароль') }}</span>
+            {% endif -%}
+
+            {% if form.accept_user_agreement.errors -%}
+            <p class="invalid-feedback-text">
+                {% for error in form.accept_user_agreement.errors -%}
+                {{ error }}
+                {% endfor -%}
+            </p>
+            <span>С <a href="{{ url_for('user_agreement') }}" target="_blank"><strong>условиями</strong></a> использования
+                ресурсов сайта ознакомлен и согласен{{ form.accept_user_agreement(class='invalid-feedback-field') }}</span>
+            {% else -%}
+            <span>С <a href="{{ url_for('user_agreement') }}" target="_blank"><strong>условиями</strong></a> использования
+                ресурсов сайта ознакомлен и согласен{{ form.accept_user_agreement() }}</span>
+            {% endif -%}
+            <div class="flash">
+                {% for cat, msg in get_flashed_messages(True) -%}
+                <p class="flash-{{ cat }}">{{ msg }}</p>
+                {% endfor -%}
+            </div>
+            <p>{{ form.submit(class='button-login') }}</p>
+        </form>
+    </div>
+</section>
+<script src="{{ url_for('static', filename='js/get_utc.js') }}"></script>
+{% endblock %}

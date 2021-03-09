@@ -1,0 +1,46 @@
+.container {
+  position: relative;
+  z-index: 1;
+  margin: 0;
+  padding: 1rem;
+}
+.countLines {
+    counter-reset: trCount;
+    overflow: auto;
+    white-space: nowrap;
+}
+.countLines tr td:first-child:before {
+    position:relative;
+    counter-increment: trCount;
+    content:counter(trCount);
+}
+.one-zero:after { content: '0'; }
+.dot-two-zero:after { content: '.00'; }
+
+.rules-tender{
+    font-size: .85rem;
+    border: 2px solid #EEE;
+    margin: 0 0 .5rem 0;
+    padding: 0 .5rem 0 .5rem;
+}
+.text-post{
+    font-size: .85rem;
+    border: 2px solid #EEE;
+    margin: 0 0 .5rem 0;
+    padding: .5rem;
+}
+
+.button-decrement-price{
+    margin: .1rem 0 .1rem 0;
+}
+caption{
+    padding: 1rem;
+    background: #EEEEEE;
+    font-weight: bold;
+}
+#label_current_summ_tender,#label_server_summ_tender,#label_time_close{
+    font-weight: bold;
+}
+.hide-column{
+    display: none;
+}

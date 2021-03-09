@@ -1,0 +1,38 @@
+.grid-catalog{
+    display: grid;
+    grid-template-columns: 25% minmax(auto, 1200px);
+    grid-template-rows: 1fr;
+    gap: 1rem;
+}
+.list-catalog{
+    padding: 0 1rem 0 0;
+    font-size: .8rem;
+    line-height: 150%;
+}
+.list-catalog li{
+	padding: .7rem;
+    border: 1px solid #EEEEEF;
+}
+@media (max-width: 768px){
+	.grid-catalog{
+		grid-template-columns: minmax(auto, 768px);
+		grid-template-rows: auto 1fr;
+	}
+	.list-catalog{
+	    padding: 1%;
+	}
+}
+.list-licoming li{
+	list-style-type: disc;
+}
+/* изменим цвет фона в меню каталога при выборе элемента */
+.no-background{
+	color: #697074;
+	background: #FFF;
+}
+.selected-catalog{
+	background: #1D498F;
+}
+.selected-catalog a{
+	color: #FFF;
+}

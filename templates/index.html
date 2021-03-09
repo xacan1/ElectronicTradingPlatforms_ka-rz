@@ -1,0 +1,123 @@
+{% extends 'base.html' %}
+
+{% block style %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style_index.css') }}" type="text/css">
+<link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css"/>
+{% endblock %}
+{% block content %}
+{{ super() }}
+<section class="container">
+    <!-- Главный контейнер cлайдера -->
+    <div class="image-slider swiper-container">
+        <!-- Обязательная оболочка -->
+        <div class="swiper-wrapper">
+            <!-- Слайды -->
+            <div class="swiper-slide">
+                <img src="{{ url_for('static', filename='images/karusel1-2.jpg') }}" alt="karusel1-2.jpg">
+            </div>
+            <div class="swiper-slide">
+                <img src="{{ url_for('static', filename='images/karusel2-2.jpg') }}" alt="karusel2-2.jpg">
+            </div>
+            <div class="swiper-slide">
+                <img src="{{ url_for('static', filename='images/karusel3-2.jpg') }}" alt="karusel3-2.jpg">
+            </div>
+            <div class="swiper-slide">
+                <img src="{{ url_for('static', filename='images/karusel4-2.jpg') }}" alt="karusel4-2.jpg">
+            </div>
+        </div>
+        <div class="swiper-button-prev"></div>
+        <div class="swiper-button-next"></div>
+        <div class="swiper-pagination"></div>
+    </div>
+    <!-- Конец cлайдера -->
+    <br>
+    <br>
+    <section class="services">
+        <div class="grid-advantages">
+            <div class="advantages advantage1">
+                <img src="{{ url_for('static', filename='images/advantage1.png') }}" alt="advantage1.png">
+            </div>
+            <div class="advantages advantage2">
+                <img src="{{ url_for('static', filename='images/advantage2.png') }}" alt="advantage2.png">
+            </div>
+            <div class="advantages advantage3">
+                <img src="{{ url_for('static', filename='images/advantage3.png') }}" alt="advantage3.png">
+            </div>
+        </div>
+        <h2 class="title">
+            Наши услуги
+        </h2>
+        <div class="grid-services">
+            <div class="grid-item-service">
+                <div class="grid-item-service-img">
+                    <img src="{{ url_for('static', filename='images/Index_image1.png') }}" alt="Index_image1.png">
+                </div>
+                <div class="grid-item-service-title">
+                    <a href="{{ url_for('catalog', url_cat='repair') }}">Ремонт авиационных двигателей</a>
+                </div>
+                <div class="grid-item-service-txt">
+                    Обслуживание и ремонт двигателей для малой авиации
+                </div>
+            </div>
+            <div class="grid-item-service">
+                <div class="grid-item-service-img">
+                    <img src="{{ url_for('static', filename='images/Index_image2.png') }}" alt="Index_image2.png">
+                </div>
+                <div class="grid-item-service-title">
+                    <a href="{{ url_for('catalog', url_cat='fire') }}">Факельные системы</a>
+                </div>
+                <div class="grid-item-service-txt">
+                    Изготовление и шеф-монтаж факельных установок
+                </div>
+            </div>
+            <div class="grid-item-service">
+                <div class="grid-item-service-img">
+                    <img src="{{ url_for('static', filename='images/Index_image3.png') }}" alt="Index_image3.png">
+                </div>
+                <div class="grid-item-service-title">
+                    <a href="{{ url_for('catalog', url_cat='reducers') }}">Редукторы</a>
+                </div>
+                <div class="grid-item-service-txt">
+                    Ремонт цилиндрических, червячных, конических и других видов редукторов
+                </div>
+            </div>
+            <div class="grid-item-service">
+                <div class="grid-item-service-img">
+                    <img src="{{ url_for('static', filename='images/Index_image4.png') }}" alt="Index_image4.png">
+                </div>
+                <div class="grid-item-service-title">
+                    <a href="{{ url_for('catalog', url_cat='centralizers') }}">Центраторы звеньев</a>
+                </div>
+                <div class="grid-item-service-txt">
+                    Для центрирования труб диаметром от 57 до 1220 мм
+                </div>
+            </div>
+            <div class="grid-item-service">
+                <div class="grid-item-service-img">
+                    <img src="{{ url_for('static', filename='images/Index_image5.png') }}" alt="Index_image5.png">
+                </div>
+                <div class="grid-item-service-title">
+                    <a href="{{ url_for('catalog', url_cat='wrenches') }}">Ударные ключи</a>
+                </div>
+                <div class="grid-item-service-txt">
+                    Накидные стальные ударные ключи под размер от 17 до 65 мм
+                </div>
+            </div>
+            <div class="grid-item-service">
+                <div class="grid-item-service-img">
+                    <img class="services-img" src="{{ url_for('static', filename='images/Index_image6.png') }}"
+                         alt="Index_image6.png">
+                </div>
+                <div class="grid-item-service-title">
+                    <a href="#">Токарный парк</a>
+                </div>
+                <div class="grid-item-service-txt">
+                    Собственный токарный парк позволяет изготовить детали по чертежам Заказчика
+                </div>
+            </div>
+        </div>
+    </section>
+</section>
+<script type="text/javascript" src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/swiper-js.js') }}"></script>
+{% endblock %}

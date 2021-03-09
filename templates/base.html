@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="author" content="Hasan Valerievich Smirnov">
+    <meta name="publisher-email" content="xacan-mail@mail.ru">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    {% block title %}
+    {% if title %}
+    <title>{{ title }}</title>
+    {% else %}
+    <title>Заголовок</title>
+    {% endif %}
+    {% endblock %}
+    <link rel="shortcut icon" href="{{ url_for('static', filename='images/favicon.ico') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/pure/src/buttons/css/buttons.css') }}"
+          type="text/css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/pure/src/forms/css/forms.css') }}" type="text/css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" type="text/css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style_tables.css') }}" type="text/css">
+    {% block style %}
+    {% endblock %}
+</head>
+<body>
+<div class="grid-site">
+    <header class="header">
+        <div class="topbar">
+            <a href="mailto:karz@ka-rz.ru" class="tooltips" data-toggle="tooltip"
+               data-placement="bottom" data-original-title="Написать нам">karz@ka-rz.ru</a>
+            <span> </span>
+            <a href="tel:+78432916000" class="tooltips" data-toggle="tooltip" data-placement="bottom"
+               data-original-title="Позвонить нам">+7 (843) 291 60 00</a>
+        </div>
+        <nav class="grid-header-menu">
+            <ul class="header-list">
+                <li class="elem-menu grid-header-logo">
+                    <a href="{{ url_for('index') }}"><img class="header-logo"
+                                                          src="{{ url_for('static', filename='images/logo.jpeg') }}"
+                                                          alt="логотип"></a>
+                </li>
+                {% if current_user and current_user.get('access') %}
+                <li class="elem-menu grid-header-item0">
+                    <a class="header-text" href="{{ url_for('add_tender') }}">ДОБАВИТЬ ТЕНДЕР</a>
+                </li>
+                {% else %}
+                <li class="elem-menu grid-header-item0"></li>
+                {% endif %}
+                <li class="elem-menu grid-header-item1"><a class="header-text" href="{{ url_for('about') }}">О
+                    КОМПАНИИ</a></li>
+                <li class="elem-menu grid-header-item2"><a class="header-text" href="{{ url_for('catalog') }}">ПРОДУКЦИЯ
+                    И УСЛУГИ</a></li>
+                <li class="elem-menu grid-header-item3"><a class="header-text"
+                                                           href="{{ url_for('list_tenders') }}">ЗАКУПКИ</a></li>
+                <li class="elem-menu grid-header-item4"><a class="header-text"
+                                                           href="{{ url_for('documents') }}">РАСКРЫТИЕ ИНФОРМАЦИИ</a>
+                </li>
+                <li class="elem-menu grid-header-item5"><a class="header-text"
+                                                           href="{{ url_for('contacts') }}">КОНТАКТЫ</a>
+                </li>
+                {% if current_user and current_user.get('username') %}
+                <li class="elem-menu grid-header-item6">
+                    <a class="header-text" href="{{ url_for('profile') }}">{{ current_user.get('username') }}</a>
+                </li>
+                <li class="elem-menu grid-header-item7">
+                    <a class="header-text" href="{{ url_for('logout') }}">ВЫЙТИ</a>
+                </li>
+                {% else %}
+                <li class="elem-menu grid-header-item6">
+                    <a class="header-text" href="{{ url_for('login') }}">ВОЙТИ</a>
+                </li>
+                <li class="elem-menu grid-header-item7"></li>
+                {% endif %}
+            </ul>
+        </nav>
+    </header>
+    <main class="grid-content">
+        <div class="content">
+            {% block content %}
+            {% endblock %}
+        </div>
+    </main>
+    <footer class="grid-footer">
+        <div class="footer_col footer-info-col1">
+            <p>КАРЗ современное предприятие, основной специализацией которого
+                является: ремонт авиационных двигателей, производство отечественных комплектующих для ремонта
+                технически-сложных изделий, изготовление и реализация газовых горелок или факелов для сжигания газа,
+                изготовление центраторов звеньев, редукторов.
+            </p>
+        </div>
+        <div class="footer_col footer-info-col2">
+            <h2 class="headline">Полезные Ссылки</h2>
+            <p><a href="{{ url_for('about') }}">О КОМПАНИИ</a></p>
+            <p><a href="{{ url_for('catalog') }}">ПРОДУКЦИЯ И УСЛУГИ</a></p>
+            <p><a href="{{ url_for('list_tenders') }}">ЗАКУПКИ</a></p>
+            <p><a href="{{ url_for('documents') }}">РАСКРЫТИЕ ИНФОРМАЦИИ</a></p>
+            <p><a href="{{ url_for('contacts') }}">КОНТАКТЫ</a></p>
+        </div>
+        <div class="footer_col footer-info-col3">
+            <img class="footer-map" src="{{ url_for('static', filename='images/map-img.png') }}">
+            <h2 class="headline">Наши Контакты</h2>
+            <p>ул. Солдатская, д.8</p>
+            <p>г. Казань, РФ</p>
+            <p>Телефон: +7(843) 291 60 00</p>
+            <p>E-Mail: karz@ka-rz.ru</p>
+        </div>
+        <div class="footer-copyright">
+            <p>{{ current_year }} &copy; Все права защищены.</p>
+        </div>
+    </footer>
+</div>
+</body>
+</html>

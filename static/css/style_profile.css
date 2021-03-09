@@ -1,0 +1,95 @@
+.profile-page {
+    padding: 1rem 0 0 0;
+}
+.profile-form {
+    background: #FFFFFF;
+    width: 100%;
+    margin: 0 2rem 2rem 0;
+    padding: 1rem 2rem 1rem 2rem;
+    text-align: left;
+    box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
+}
+caption{
+    padding: 1rem;
+    background: #EEEEEE;
+    font-weight: bold;
+}
+table{
+    width: 100%;
+    border: 2px solid #EEEEEE;
+    border-collapse: collapse;/*убираем пустые промежутки между ячейками*/
+}
+thead{
+    background: #FAFAFA;
+}
+th{
+    border: 2px solid #EEEEEE;
+    padding: .5rem;
+}
+tr:hover{
+    background: #EEEEEE;
+}
+td{
+    border: 1px solid #EEEEEE;
+    padding: .5rem;
+}
+.list-licoming li{
+	list-style-type: disc;
+}
+.block-user-files{
+    border: 2px solid #EEEEEE;
+}
+.upload-info{
+    border: 2px solid #EEEEEE;
+    padding: 0 1rem 0 1rem;
+}
+.block-user-before-registration{
+    border: 2px solid #EEEEEE;
+    padding: 0 1rem 0 1rem;
+}
+.block-user-files p{
+    padding: 0 0 0 1rem;
+}
+/* Делаем кнопку из ссылки */
+.link-button{
+    display: block;
+    background: #4E5858;
+    padding: 1rem;
+    color: #FFFFFF;
+    font-size: 1rem;
+    transition: background-color .2s linear;
+    cursor: pointer;
+}
+.link-button:hover,.link-button:active,.link-button:focus{
+    background: #272727;
+    color: #FFFFFF;
+    text-decoration: none;
+}
+.grid-buttons-profile{
+    display: grid;
+    grid-template-columns: repeat(4, minmax(120px, 1fr));
+    grid-template-rows: 1fr;
+    border: 2px solid #EEEEEE;
+    padding: 1rem;
+    width: 100%;
+    gap: 2.5rem;
+    align-items: center;
+}
+@media (max-width: 768px){
+    .grid-buttons-profile{
+        grid-template-columns: 1fr;
+    }
+}
+.upload-file-form div{
+    padding: 1rem;
+    border: 2px solid #EEEEEE;
+}
+.green-text{
+    color: green;
+}
+.red-text{
+    color: red;
+}
+.list-agreement li{
+	list-style-type: disc;
+}

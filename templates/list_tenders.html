@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block style %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style_announcement.css') }}" type="text/css">
+{% endblock %}
+
+{% block content %}
+{{ super() }}
+<div class="title-bar">
+    <div class="title-text">
+        <p>{{ title }}</p>
+    </div>
+</div>
+<div class="announcement-page">
+    <noscript class="warning-noscript">
+        Ваш браузер не поддерживает JavaScript или поддержка отключена в настройках.
+    </noscript>
+    {% for announcement in announcements %}
+    <div class="announcement-section">
+        <p class="announcement-title">
+            <a class="lannouncement-link" href="{{ url_for('show_post', url_post=announcement['url_post']) }}">{{
+                announcement['title'] }}</a>
+            <span class="announcement-author">автор: {{ announcement['author'].username }}</span>
+            {% if current_user['access'] %}
+            <span class="announcement-time">от <span class="iso-data">{{ announcement['time_post'].strftime('%Y-%m-%dT%H:%M:%SZ') }}</span></span>
+            {% else %}
+            <span class="announcement-time">от <span class="iso-data">{{ announcement['time_start'].strftime('%Y-%m-%dT%H:%M:%SZ') }}</span></span>
+            {% endif %}
+        </p>
+        <p class="announcement-text">{{ announcement['post'][:50] }}...</p>
+        <p class="announcement-deadline">Срок исполнения контракта: <span class="iso-data">{{
+            announcement['contract_deadline'] }}</span></p>
+        <div class="button-show-post">
+            <button class="pure-button"
+                    onclick="window.location.href = '{{ url_for('show_post', url_post=announcement['url_post']) }}';">
+                Перейти к процедуре
+            </button>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+<script src="{{ url_for('static', filename='js/set_local_date.js') }}"></script>
+{% endblock %}

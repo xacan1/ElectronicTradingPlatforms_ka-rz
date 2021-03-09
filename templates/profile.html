@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+
+{% block style %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style_profile.css') }}" type="text/css">
+{% endblock %}
+
+{% block content %}
+{{ super() }}
+<div class="title-bar">
+    <div class="title-text">
+        <p>{{ title }}</p>
+    </div>
+</div>
+<section class="container">
+    <div class="profile-page">
+        <div class="profile-form">
+            <div class="flash">
+                {% for cat, msg in get_flashed_messages(True) %}
+                <p class="flash-{{ cat }}">{{ msg }}</p>
+                {% endfor %}
+            </div>
+            <div class="block-user-info">
+                <table>
+                    <caption>{{ title_page }}</caption>
+                    <tbody>
+                    {% for key in info_for_profile %}
+                    <tr>
+                        <td>{{ key }}:</td>
+                        {% if key == 'Учетная запись подтверждена' and info_for_profile[key] != 'Да' %}
+                        <td class="red-text">{{ info_for_profile[key] }}</td>
+                        {% elif key == 'Учетная запись подтверждена' and info_for_profile[key] == 'Да' %}
+                        <td class="green-text">{{ info_for_profile[key] }}</td>
+                        {% else %}
+                        <td>{{ info_for_profile[key] }}</td>
+                        {% endif %}
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% if info_for_profile.get('Учетная запись подтверждена') != 'Да' %}
+            <div class="block-user-before-registration">
+                <p>
+                    <strong>Уважаемые господа! Вы находитесь в личном кабинете на портале АО «КАРЗ». Настоящим
+                        предлагаем Вам пройти процедуру аккредитации для получения возможности участия в тендерных
+                        процедурах, объявляемых АО «КАРЗ» на закупку ТМЦ и оборудования. Для получения аккредитации
+                        необходимо прикрепить ряд документов, после чего заявка будет отправлена на
+                        рассмотрение.</strong>
+                </p>
+            </div>
+            {% endif %}
+            <div class="block-user-files">
+                <p>Список файлов пользователя:</p>
+                <ul class="list-licoming">
+                    {% for file_name in files %}
+                    {% if file_name == '---' %}
+                    <li>{{ file_name }}</li>
+                    {% else %}
+                    <li><a href="{{ url_for('download_files', username=username_profile, filename=file_name) }}">{{
+                        file_name }}</a></li>
+                    {% endif %}
+                    {% endfor %}
+                </ul>
+            </div>
+            {% if username_profile == current_user.username %}
+            <div class="grid-buttons-profile">
+                <a class="pure-button" href="{{ url_for('upload_files') }}">Загрузить документы</a>
+                <a class="pure-button" href="{{ url_for('edit_profile') }}">Изменить профиль</a>
+                <a class="pure-button" href="{{ url_for('password_change') }}">Изменить пароль</a>
+                {% if current_user.access %}
+                <a class="pure-button" href="{{ url_for('list_users') }}">Список пользователей</a>
+                {% endif %}
+            </div>
+            {% elif username_profile != current_user.username and current_user.access %}
+            <div class="grid-buttons-profile">
+                <a class="pure-button" href="{{ url_for('edit_profile', username=username_profile) }}">Изменить
+                    профиль</a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</section>
+{% endblock %}

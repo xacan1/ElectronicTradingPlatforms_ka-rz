@@ -1,0 +1,326 @@
+{% extends 'base.html' %}
+
+{% block style %}
+<meta http-equiv="Refresh" content="600">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style_for_tender.css') }}" type="text/css">
+{% endblock %}
+
+{% block content %}
+{{ super() }}
+<section class="container">
+    <noscript class="warning-noscript">
+        Ваш браузер не поддерживает JavaScript или поддержка отключена в настройках.
+    </noscript>
+    <div class="tender-section">
+        <h1>
+            {{ title_page }}
+        </h1>
+        <div class="flash">
+            {% for category, msg in get_flashed_messages(True) %}
+            <p class="flash-msg flash-{{ category }}">{{ msg }}</p>
+            {% endfor %}
+        </div>
+        {% if post_info['today'] > post_info['time_start'] and post_info['today'] < post_info['time_close'] %}
+        <div class="tender-goods">
+            <label id="label_current_summ_tender">Текущая сумма тендера:</label>
+            <form class="send-new-price" action="{{ url_for('show_tender', url_post=post_info['url_post']) }}"
+                  method="post" novalidate>
+                {{ form.hidden_tag() }}
+                {% if form.tender_info_JSON.errors -%}
+                <span class="invalid-feedback-text">
+                    {% for error in form.tender_info_JSON.errors %}
+                    {{ error }}
+                    {% endfor %}
+                </span>
+                <p>{{ form.tender_info_JSON(type='hidden') }}</p>
+                {% else -%}
+                <p>{{ form.tender_info_JSON(type='hidden') }}</p>
+                {% endif -%}
+                <table id="table-goods" class="paleBlueRows countLines">
+                    <caption>Товары для аукциона</caption>
+                    <thead>
+                    <tr>
+                        <th>№</th>
+                        <th>Код</th>
+                        <th>Наименование</th>
+                        <th>Единица измерения</th>
+                        <th>Шаг цены</th>
+                        <th>Количество</th>
+                        <th>Текущая цена</th>
+                        <th>Владелец цены</th>
+                        <th>Новая цена</th>
+                        <th>Изменение цены</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for row in post_info['tenders'] if row.id != 0 %}
+                    <tr>
+                        <td></td>
+                        <td>{{ row.product_code }}</td>
+                        <td>{{ row.product_name }}</td>
+                        <td>{{ row.unit }}</td>
+                        <td class="dot-two-zero">{{ row.step_price }}</td>
+                        <td>{{ row.quantity }}</td>
+                        <td class="one-zero">{{ row.price }}</td>
+                        <td>{{ row.owner_price_username }}</td>
+                        <td>
+                            <input name="input{{ row.id }}" oninput="inp_isum(this)" onchange="after_change_price()"
+                                   required type="text" size=8>
+                        </td>
+                        <td>
+                            <button name="decrement_price"
+                                    onclick="decrementPrice(this);return false;">Снизить цену
+                            </button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+                <p>{{ form.submit(class='button-new-price') }}</p>
+            </form>
+        </div>
+        {% elif post_info['today'] > post_info['time_close'] %}
+        <div>
+            <p>Аукцион закончился.</p>
+        </div>
+        {% else %}
+        <div>
+            <p>Аукцион еще не начался.</p>
+            {% set difference_time = post_info['time_start'] - post_info['today'] %}
+            {% set hours = (difference_time.seconds/60/60)|round(1)|int %}
+            {% set minutes = (difference_time.seconds/60 - hours*60)|round(1)|int %}
+            <p>До начала аукциона: {{ difference_time.days }}д {{ hours }}ч {{ minutes }}м</p>
+        </div>
+        {% endif %}
+    </div>
+    <script type="text/javascript">
+        window.onload = function() {
+            restore_client_prices_from_JSON();
+            get_current_summ_tender();
+            let timer_refresh = setInterval(ajax_get_current_tenders, 2000);
+            let timer_clear_flash = setTimeout(clear_flash_message, 8000);
+            coloring_text_row();
+        }
+        function decrementPrice(row_btn)
+        {
+            let current_row = row_btn.parentNode.parentNode;
+            let price_step = parseInt(current_row.cells[4].innerHTML);
+            let current_price = parseFloat(current_row.cells[8].childNodes[1].value);
+            if (isNaN(current_price) == true || current_price == 0) {
+                current_price = parseFloat(current_row.cells[6].innerHTML);
+            }
+            let client_price = current_price - price_step;
+            current_row.cells[8].childNodes[1].value = client_price;
+            //alert(current_row.cells[8].childNodes[5].value);
+            //inp_isum(current_row.cells[8].childNodes[1]);
+            save_client_prices();
+            get_current_summ_tender();
+        }
+        function inp_isum(e_field)
+        {
+            /////////////запоминание позиции курсора
+            let c_p
+            let ie=true
+            let r
+            let e_range
+            if("createRange" in document) {
+                c_p=e_field.selectionEnd
+                ie=false
+            }
+            if(ie) {
+                e_range=e_field.createTextRange()
+                e_range.expand("character",e_field.value.length)
+                r=document.selection.createRange()
+                r.setEndPoint("StartToStart",e_range)
+                c_p=r.text.length
+                //////////// форматирование введенной строки
+            }
+            let txt=e_field.value
+            let txt1=""
+            let ii, litera
+            for(let i=0;i<txt.length;i++) {
+                ii=txt.length-1-i
+                litera=txt.charAt(ii)
+                if("0123456789".indexOf(litera)>=0) {
+                    txt1=litera+txt1
+                }
+                else {
+                    if(c_p>ii) c_p--
+                }
+            }
+            /////////////сохранение готовой строки и восстановление позиции курсора
+            e_field.value=txt1
+            if(ie) {
+                r.move("character",c_p)
+                r.select()
+            }
+            else {
+                e_field.setSelectionRange(c_p,c_p)
+            }
+            save_client_prices();
+            get_current_summ_tender();
+        }
+        //подготовим список цен и кодов товаров для сохранения в строке JSON в случае если клиент перезагрузит страницу
+        function get_client_prices()
+        {
+            // создадим объект {код продукта, цена} и поместим эти объекты в массив
+            let client_prices = [];
+            let price_obj;
+            let table = document.getElementById('table-goods');
+            for (let j = 1; j < table.rows.length; j++) {
+                price_obj = {};
+                price_obj.product_code = table.rows[j].cells[1].innerHTML;
+                price_obj.client_price = parseFloat(table.rows[j].cells[8].childNodes[1].value);
+                client_prices.push(price_obj);
+            }
+            return client_prices;
+        }
+        function after_change_price()
+        {
+            check_price_step();
+            save_client_prices();
+            get_current_summ_tender();
+        }
+        //проверим что бы изменение цены было не меньше изменения шага, в случае чего приведем цену к серверной
+        function check_price_step()
+        {
+            let table = document.getElementById('table-goods');
+            for (let j = 1; j < table.rows.length; j++) {
+                let price_step = parseInt(table.rows[j].cells[4].innerHTML);
+                let client_price = parseFloat(table.rows[j].cells[8].childNodes[1].value);
+                let server_price = parseFloat(table.rows[j].cells[6].innerHTML);
+                if (Math.abs(server_price - client_price) < price_step) {
+                    table.rows[j].cells[8].childNodes[1].value = server_price;
+                }
+            }
+        }
+        //при первой загрузке и при полной перезагрузке страницы восстанавливает значения цен установленных клиентом из
+        //скрытого строкового поля tender_info_JSON
+        function restore_client_prices_from_JSON()
+        {
+            let client_prices = [];
+            let tender_info_JSON = document.getElementById('tender_info_JSON');
+            let table = document.getElementById('table-goods');
+            if (tender_info_JSON.value.length > 9) {
+                client_prices = JSON.parse(tender_info_JSON.value);
+            }
+            for (let j = 1; j < table.rows.length; j++) {
+                let product_code = table.rows[j].cells[1].innerHTML;
+                let cell_client_price = table.rows[j].cells[8].childNodes[1];
+                if (client_prices.length > 0 && client_prices[j-1].product_code == product_code) {
+                    cell_client_price.value = client_prices[j-1].client_price;
+                }
+                else {
+                    cell_client_price.value = parseFloat(table.rows[j].cells[6].innerHTML);
+                }
+            }
+        }
+        //сохраняет значения таблицы в скрытом строковом поле в формате JSON
+        function save_client_prices()
+        {
+            let client_prices = get_client_prices();
+            let tender_info_JSON = document.getElementById('tender_info_JSON');
+            tender_info_JSON.value = JSON.stringify(client_prices);
+        }
+        function get_current_summ_tender()
+        {
+            let text_label = 'Текущая сумма тендера: ';
+            let summ_tender = document.getElementById('label_current_summ_tender');
+            let table = document.getElementById('table-goods');
+            let summ = 0;
+            for (let j = 1; j < table.rows.length; j++) {
+                summ += parseFloat(table.rows[j].cells[8].childNodes[1].value);
+            }
+            summ_tender.innerHTML = text_label + summ;
+        }
+        function get_url_post() {
+            let url = window.location.href;
+            let k = url.length - 1;
+            let url_post = '';
+            while (url[k] != '/' && k > 0) {
+               url_post = url_post + url[k];
+               k--;
+            }
+            url_post = url_post.split('').reverse().join('');
+            return url_post;
+        }
+        //запрос на сервер по таймеру без перезагрузки страницы, возвращает актуальную таблицу из БД сервера
+        function ajax_get_current_tenders()
+        {
+            let xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    reload_data_table(this.responseText);
+                    coloring_text_row();
+                }
+            }
+            let url_request = document.location.protocol + '//' + document.location.host + "{{ url_for('get_table_tender') }}"
+            xhttp.open('POST', url_request, true);
+            xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+            xhttp.send('url_post=' + get_url_post());
+        }
+        //заполняет таблицу данными полученными от сервера при ajax запросе
+        //POST запрос используется что бы избежать кеширования браузером GET запроса
+        function reload_data_table(data)
+        {
+            table_data = JSON.parse(data);
+            if (table_data.length == 0) {
+                return;
+            }
+            let table = document.getElementById('table-goods');
+            let username = '{{ current_user['username'] }}';
+            let i = 0;
+            let row;
+            let cell_server_price;
+            let cell_current_price;
+            let cell_owner_price_username;
+            let server_price;
+            let current_price;
+            while (i < table_data.length) {
+                row = table_data[i];
+                for (let j = 1; j < table.rows.length; j++) {
+                    product_code = table.rows[j].cells[1].innerHTML;
+                    cell_server_price = table.rows[j].cells[6];
+                    server_price = parseFloat(cell_server_price.innerHTML)
+                    cell_current_price = table.rows[j].cells[8].childNodes[1];
+                    current_price = parseFloat(cell_current_price.value);
+                    //console.log(row['owner_price_username'],username);
+                    if (row['product_code'] == product_code) {
+                        cell_server_price.innerHTML = row['price'] + '.0';// для красоты зададим имитацию копеек
+                        cell_owner_price_username = table.rows[j].cells[7];
+                        cell_owner_price_username.innerHTML = row['owner_price_username'];
+                    }
+                }
+                i++;
+            }
+        }
+        function coloring_text_row()
+        {
+            let table = document.getElementById('table-goods');
+            let username = '{{ current_user['username'] }}';
+            let cell_owner_price_username;
+            let cell_server_price;
+            for (let j = 1; j < table.rows.length; j++) {
+                cell_server_price = table.rows[j].cells[6];
+                cell_owner_price_username = table.rows[j].cells[7];
+                if (cell_owner_price_username.innerHTML == username) {
+                    cell_server_price.style = 'color: green; transition: color .2s linear;';
+                }
+                else {
+                    cell_server_price.style = 'color: red; transition: color .2s linear;';
+                }
+            }
+        }
+        //по таймеру убирает надпись от flash!
+        function clear_flash_message()
+        {
+            let elements = document.getElementsByClassName('flash-msg');
+            for (let element of elements) {
+                //element.remove();
+                element.innerHTML = '...';
+                //element.style = 'background-color: "#FFFFFF";';
+            }
+        }
+    </script>
+</section>
+{% endblock %}

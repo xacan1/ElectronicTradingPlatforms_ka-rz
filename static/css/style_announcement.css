@@ -1,0 +1,39 @@
+.announcement-section {
+    min-width: 40%;
+    max-width: 80%;
+    border: 1px solid #eee;
+    position: relative;
+    z-index: 1;
+    background: #FFFFFF;
+    margin: 2rem 2rem 2rem;
+    padding: 1rem 2rem 1rem 2rem;
+    text-align: left;
+    box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
+}
+/*.button-show-post{
+    text-align: right;
+}*/
+.announcement-title, .about-title {
+    font-weight: bold;
+    margin: 0;
+    padding: 0.5rem;
+    background: #eee;
+}
+.announcement-link {
+    font-weight: bold;
+}
+.announcement-time, .announcement-author, .announcement-deadline {
+    font-size: 0.75rem;
+    font-style: italic;
+}
+.announcement-deadline {
+    padding: 0 0 0 5rem;
+}
+.announcement-text {
+    margin: 0;
+    font-size: 0.8rem;
+    padding: 1rem 0 0 2rem;
+}
+.button-show-post{
+
+}

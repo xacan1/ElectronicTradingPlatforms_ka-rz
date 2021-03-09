@@ -1,0 +1,11 @@
+.about-text p{
+	font-size: .8rem;
+	line-height: 150%;
+}
+.title-bar{
+	border-top: 1px outset #EEEEEF;
+	font-size: 1rem;
+	background-color: #FDFDFF;
+	padding: 1rem 0 1rem 0;
+	border-bottom: 1px inset #EEEEEF;
+}

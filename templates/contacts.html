@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% block style %}
+{% endblock %}
+{% block content %}
+{{ super() }}
+<div class="title-bar">
+    <div class="title-text">
+        <p>{{ title }}</p>
+    </div>
+</div>
+<div class="text">
+    <div>
+        <script type="text/javascript" charset="utf-8" async
+                src="https://api-maps.yandex.ru/services/constructor/1.0/js/?um=constructor%3Ae7e0390faad715000ba52bc6a51db1fcc5f7c0227350041681d0595e1b9ce2e3&amp;width=100%25&amp;height=400&amp;lang=ru_RU&amp;scroll=true"></script>
+    </div>
+    <h2>
+        Обратная связь
+    </h2>
+    <ul>
+        <li>
+            РФ, РТ, г. Казань, ул. Солдатская, д.8
+        </li>
+        <li>
+            <span>Приемная: </span><a href="mailto:karz@ka-rz.ru">karz@ka-rz.ru</a>
+        </li>
+        <li>
+            <span>Ремонт двигателей: </span><a href="mailto:motor@ka-rz.ru">motor@ka-rz.ru</a>
+        </li>
+        <li>
+            <span>Ремонт и продажа газовых горелок: </span> <a href="mailto:gaz@ka-rz.ru">gaz@ka-rz.ru</a>
+        </li>
+        <li>
+            <span>Закупки: </span><a href="mailto:pd@ka-rz.ru ">pd@ka-rz.ru </a>
+        </li>
+        <li>
+            <a href="tel:+78432916000">+7 (843) 291 60 00</a>
+        </li>
+        <li>
+            <a href="https://ka-rz.ru/" target="_blank">https://ka-rz.ru/</a>
+        </li>
+    </ul>
+    <h2>
+        Время работы
+    </h2>
+    <ul>
+        <li>
+            <strong>Пн- Пт:</strong> с 9:00 до 18:00
+        </li>
+        <li>
+            <strong>Сб, Вс:</strong> выходной
+        </li>
+    </ul>
+</div>
+{% endblock %}

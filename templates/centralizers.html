@@ -1,0 +1,387 @@
+{% extends 'catalog.html' %}
+{% block style %}
+{{ super() }}
+{% endblock %}
+{% block catalog_content %}
+{{ super() }}
+<div class="text">
+    <p>
+        АО «КАРЗ» предлагает центраторы звеньевые наружные (ЦЗН) предназначенные для центровки торцев труб перед сваркой
+        при строительстве и ремонте трубопроводов, где невозможно применение внутренних центраторов. Размеры сварочного
+        окна соответствуют требованиям РД558-92. Применение полых роликов из трубы НКТ значительно уменьшает вес
+        центратора, толщина соединительных звеньев и диаметры осей обеспечивают запас прочности, необходимый при работе.
+    </p>
+    <p>
+        Дополнительно разработанная серия «широких» центраторов позволяет производить аргонно-дуговую сварку труб.
+    </p>
+    <img src="{{ url_for('static', filename='images/centralizers.png') }}" alt="centralizers.png" style="width:50%;height:50%;">
+    <p>
+        Номенклатурный ряд предлагаемых центраторов звеньев:
+    </p>
+    <table style="width: 100%;">
+        <tbody>
+        <tr>
+            <td>
+                <p align="center">
+                    <b>№ п/п </b>
+                </p>
+                <b> </b>
+            </td>
+            <td>
+                <b> </b>
+                <p align="center">
+                    <b>
+                        Наименование </b>
+                </p>
+                <b> </b>
+            </td>
+            <td>
+                <b> </b>
+                <p align="center">
+                    <b>
+                        Диаметр центрируемых труб, мм </b>
+                </p>
+                <b> </b>
+            </td>
+            <td>
+                <b> </b>
+                <p align="center">
+                    <b>
+                        Масса, кг</b>
+                </p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <p align="center">
+                    1
+                </p>
+            </td>
+            <td>
+                <p align="center">
+                    ЦЗН57
+                </p>
+            </td>
+            <td>
+                <p align="center">
+                    57
+                </p>
+            </td>
+            <td>
+                <p align="center">
+                    3
+                </p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <p align="center">
+                    2
+                </p>
+            </td>
+            <td>
+                <p align="center">
+                    ЦЗН 100
+                </p>
+            </td>
+            <td>
+                <p align="center">
+                    89-114
+                </p>
+            </td>
+            <td>
+                <p align="center">
+                    4
+                </p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <p align="center">
+                    3
+                </p>
+            </td>
+            <td>
+                <p align="center">
+                    ЦЗН 150
+                </p>
+            </td>
+            <td>
+                <p align="center">
+                    153-168
+                </p>
+            </td>
+            <td>
+                <p align="center">
+                    10,3
+                </p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <p align="center">
+                    4
+                </p>
+            </td>
+            <td>
+                <p align="center">
+                    ЦЗН 219
+                </p>
+            </td>
+            <td>
+                <p align="center">
+                    219
+                </p>
+            </td>
+            <td>
+                <p align="center">
+                    11,2
+                </p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <p align="center">
+                    5
+                </p>
+            </td>
+            <td>
+                <p align="center">
+                    ЦЗН 273
+                </p>
+            </td>
+            <td>
+                <p align="center">
+                    270
+                </p>
+            </td>
+            <td>
+                <p align="center">
+                    11,9
+                </p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <p align="center">
+                    6
+                </p>
+            </td>
+            <td>
+                <p align="center">
+                    ЦЗН 325
+                </p>
+            </td>
+            <td>
+                <p align="center">
+                    325
+                </p>
+            </td>
+            <td>
+                <p align="center">
+                    14,8
+                </p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <p align="center">
+                    7
+                </p>
+            </td>
+            <td>
+                <p align="center">
+                    ЦЗН 377
+                </p>
+            </td>
+            <td>
+                <p align="center">
+                    377
+                </p>
+            </td>
+            <td>
+                <p align="center">
+                    16,1
+                </p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <p align="center">
+                    8
+                </p>
+            </td>
+            <td>
+                <p align="center">
+                    ЦЗН 426
+                </p>
+            </td>
+            <td>
+                <p align="center">
+                    420
+                </p>
+            </td>
+            <td>
+                <p align="center">
+                    17,4
+                </p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <p align="center">
+                    9
+                </p>
+            </td>
+            <td>
+                <p align="center">
+                    ЦЗН 530
+                </p>
+            </td>
+            <td>
+                <p align="center">
+                    530
+                </p>
+            </td>
+            <td>
+                <p align="center">
+                    15,4
+                </p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <p align="center">
+                    10
+                </p>
+            </td>
+            <td>
+                <p align="center">
+                    ЦЗН 630
+                </p>
+            </td>
+            <td>
+                <p align="center">
+                    630
+                </p>
+            </td>
+            <td>
+                <p align="center">
+                    17,9
+                </p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <p align="center">
+                    11
+                </p>
+            </td>
+            <td>
+                <p align="center">
+                    ЦЗН 720
+                </p>
+            </td>
+            <td>
+                <p align="center">
+                    720
+                </p>
+            </td>
+            <td>
+                <p align="center">
+                    19,9
+                </p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <p align="center">
+                    12
+                </p>
+            </td>
+            <td>
+                <p align="center">
+                    ЦЗН 820
+                </p>
+            </td>
+            <td>
+                <p align="center">
+                    820
+                </p>
+            </td>
+            <td>
+                <p align="center">
+                    21
+                </p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <p align="center">
+                    13
+                </p>
+            </td>
+            <td>
+                <p align="center">
+                    ЦЗН 1020
+                </p>
+            </td>
+            <td>
+                <p align="center">
+                    1020
+                </p>
+            </td>
+            <td>
+                <p align="center">
+                    32,7
+                </p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <p align="center">
+                    14
+                </p>
+            </td>
+            <td>
+                <p align="center">
+                    ЦЗН 1220
+                </p>
+            </td>
+            <td>
+                <p align="center">
+                    1220
+                </p>
+            </td>
+            <td>
+                <p align="center">
+                    38
+                </p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <p align="center">
+                    15
+                </p>
+            </td>
+            <td>
+                <p align="center">
+                    ЦЗН 1420
+                </p>
+            </td>
+            <td>
+                <p align="center">
+                    1420
+                </p>
+            </td>
+            <td>
+                <p align="center">
+                    43,5
+                </p>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+{% endblock %}

@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+
+{% block style %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style_profile.css') }}" type="text/css">
+{% endblock %}
+
+{% block content %}
+{{ super() }}
+<div class="title-bar">
+    <div class="title-text">
+        <p>{{ title }}</p>
+    </div>
+</div>
+<section class="container">
+    <div class="profile-page">
+        <div class="profile-form">
+            <div class="flash">
+                {% for cat, msg in get_flashed_messages(True) %}
+                <p class="flash-{{ cat }}">{{ msg }}</p>
+                {% endfor %}
+            </div>
+            {% if form %}
+            <div class="upload-info">
+                <p>Для аккредитации трубуется перечень документов (формат pdf):</p>
+                <ol>
+                    <li>Карта партнера с реквизитами</li>
+                    <li>Свидетельство о регистрации</li>
+                    <li>Свидетельство о постановке на учет</li>
+                    <li>Устав (первые 3 страницы)</li>
+                    <li>Выписка из ЕГРЮЛ</li>
+                </ol>
+                <p class="small-text">Загружать файлы можно в любой последовательности, файлы будут доступены в профиле
+                    Личного кабинета. Размер каждого файла не должен превышать <strong>10Мб</strong>. Имена файлов при
+                    загрузке будут изменены согласно правилам траслитерации.</p>
+            </div>
+            <form class="pure-form upload-file-form" action="{{ url_for('upload_files') }}" method="post"
+                  enctype="multipart/form-data" novalidate>
+                {{ form.hidden_tag() }}
+                <div>
+                    {% if form.file.errors -%}
+                    <span class="invalid-feedback-text">
+                    {% for error in form.file.errors -%}
+                    {{ error }}
+                    {% endfor -%}
+                    </span>
+                    <br>
+                    <span>{{ form.file(size=256, placeholder='File', class='invalid-feedback-field') }}</span>
+                    {% else -%}
+                    <span>{{ form.file(size=256, placeholder='File') }}</span>
+                    {% endif -%}
+                    <span>{{ form.submit(class='pure-button') }}</span>
+                </div>
+            </form>
+            {% else %}
+            <br>
+            <p><a class="pure-button" href="{{ url_for('upload_files') }}">Попробовать еще раз</a></p>
+            {% endif %}
+            <br>
+            <button class="pure-button" onclick="window.location.href = '{{ url_for('profile') }}';">Вернуться в
+                профиль
+            </button>
+        </div>
+    </div>
+</section>
+{% endblock %}

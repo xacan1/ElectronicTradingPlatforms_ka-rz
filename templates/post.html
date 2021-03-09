@@ -1,0 +1,117 @@
+{% extends 'base.html' %}
+
+{% block style %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style_for_post.css') }}" type="text/css">
+{% endblock %}
+
+{% block content %}
+{{ super() }}
+<div class="title-bar">
+    <div class="title-text">
+        <p>{{ title }}</p>
+    </div>
+</div>
+<div class="post-section">
+    <noscript class="warning-noscript">
+        Ваш браузер не поддерживает JavaScript или поддержка отключена в настройках.
+    </noscript>
+    <h1 class="title-post">
+        {{ post_info['title'] }}
+    </h1>
+    <p class="author-post">
+        автор: {{ post_info['author'] }}
+    </p>
+    <p class="datatime-post">
+        {% if current_user['access'] %}
+        от <span class="iso-data">{{ post_info['time_post'].strftime('%Y-%m-%dT%H:%M:%SZ') }}</span>
+        {% else %}
+        от <span class="iso-data">{{ post_info['time_start'].strftime('%Y-%m-%dT%H:%M:%SZ') }}</span>
+        {% endif %}
+    </p>
+    <div class="text-post">
+        {% for litera in post_info['post'] %}
+        {%- if litera != '\n' -%}
+        {{ litera }}
+        {%- else %}
+        <br>
+        {% endif -%}
+        {% endfor %}
+    </div>
+    <p class="time-start">
+        Время начала торгов: <span class="iso-data">{{ post_info['time_start'].strftime('%Y-%m-%dT%H:%M:%SZ') }}</span>
+    </p>
+    <p class="time-close">
+        Время окончания торгов: <span
+            class="iso-data">{{ post_info['time_close'].strftime('%Y-%m-%dT%H:%M:%SZ') }}</span>
+    </p>
+    <div class="tender-goods">
+        <table id="table-goods" class="paleBlueRows countLines">
+            <caption>Таблица товаров аукциона</caption>
+            <thead>
+            <tr>
+                <th>№</th>
+                {% if current_user['access'] %}
+                <th>Код</th>
+                {% else %}
+                <th class="hide-column">Код</th>
+                {% endif %}
+                <th>Наименование</th>
+                <th>Ед. изм.</th>
+                <th>Шаг цены</th>
+                <th>Количество</th>
+                {% if current_user['access'] or post_info['today'] < post_info['time_close'] %}
+                <th>Цена</th>
+                {% endif %}
+                <th>НДС,%</th>
+                {% if current_user['access'] %}
+                <th>Участник</th>
+                {% endif %}
+            </tr>
+            </thead>
+            <tbody>
+            {% for row in post_info['tenders'] if row.id != 0 %}
+            <tr>
+                <td class="digit-field"></td>
+                {% if current_user['access'] %}
+                <td class="string-field">{{ row.product_code }}</td>
+                {% else %}
+                <td class="string-field hide-column">{{ row.product_code }}</td>
+                {% endif %}
+                <td class="string-field">{{ row.product_name }}</td>
+                <td class="digit-field">{{ row.unit }}</td>
+                <td class="digit-field dot-two-zero">{{ row.step_price }}</td>
+                <td class="digit-field">{{ row.quantity }}</td>
+                {% if current_user['access'] or post_info['today'] < post_info['time_close'] %}
+                <td class="digit-field one-zero">{{ row.price }}</td>
+                {% endif %}
+                <td class="digit-field">{{ row.rate_vat }}</td>
+                {% if current_user['access'] %}
+                <td class="string-field">{{ row.owner_price_username }}</td>
+                {% endif %}
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <p>
+        <button class="pure-button" onclick="window.location.href = '{{ url_for('list_tenders') }}';">
+            Вернуться к списку
+        </button>
+        <button class="pure-button"
+                onclick="window.location.href = '{{ url_for('show_tender', url_post=post_info['url_post']) }}';">
+            Перейти к аукциону
+        </button>
+        {% if current_user['access'] %}
+        <button class="pure-button"
+                onclick="window.location.href = '{{ url_for('edit_tender', url_post=post_info['url_post']) }}';">
+            Редактировать тендер
+        </button>
+        <button class="pure-button"
+                onclick="window.location.href = '{{ url_for('delete_tender', url_post=post_info['url_post']) }}';">
+            Удалить тендер
+        </button>
+        {% endif %}
+    </p>
+</div>
+<script src="{{ url_for('static', filename='js/set_local_date.js') }}"></script>
+{% endblock %}
