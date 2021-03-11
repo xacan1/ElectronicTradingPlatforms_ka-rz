@@ -289,13 +289,16 @@ def edit_profile(username=None):
         if my_account:
             confirmed = current_user.get('confirmed')
         else:
-            confirmed = True if form_edit_profile.confirmed.data else False
+            confirmed = 0 if form_edit_profile.confirmed.data else 1
 
         result, msg = models.update_profile(username, email, company, inn, phone, user_timezone, confirmed)
 
         if result:
-            user_info = models.get_info_by_username(username)
-            login_user(username, user_info.get('access'), user_info.get('timezone'), user_info.get('confirmation_code'))
+            if my_account:
+                user_info = models.get_info_by_username(username)
+                login_user(username, user_info.get('access'), user_info.get('timezone'),
+                           user_info.get('confirmation_code'))
+
             flash(msg, category='success')
         else:
             flash(msg, category='error')

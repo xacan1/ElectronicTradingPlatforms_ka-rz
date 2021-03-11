@@ -236,7 +236,9 @@
             let JSON_row, head_row, body_row;
             let cell_server_price, cell_current_price, cell_owner_price_username, th_cell, td_cell;
             let server_price, current_price;
-            let number_cell_user, add_new_user; //число колонок с участниками(динамические колонки)
+            let number_static_cells = 10; //число статических столбцов в таблице
+            let number_cell_user; //число колонок с участниками(динамические колонки)
+            users = {}; //объект для записи соответствия представления участника в таблице и его id в базе
             let i = 0;
             let hide_user_row, user_row;
             
@@ -244,30 +246,45 @@
                 JSON_row = table_data[i];
                 number_cell_user = 0;
                 head_row = thead.rows[thead.rows.length-1];
-                hide_user_row = 'Участник #' + JSON_row['owner_price_id'];
                 user_row = JSON_row['owner_price_username'];
+
+                if (user_row == username) {
+                    hide_user_row = username;
+                }
+                else {
+                    hide_user_row = 'Участник ' + String(Object.keys(users).length + 1);
+                }
+
+                //добавим id пользователя и представление в объект {id = 'Участник №''}
+                if (!(JSON_row['owner_price_id'] in users)) {
+                    users[JSON_row['owner_price_id']] = hide_user_row;
+                }
+
                 //ищем колонку с текущим участником
-                for (let j = 1; j < head_row.cells.length; j++) {
-                    if (head_row.cells[j].innerHTML == hide_user_row) {
+                for (let j = 10; j < head_row.cells.length; j++) {                
+                    if (head_row.cells[j].innerHTML == users[JSON_row['owner_price_id']]) {
                         number_cell_user = j;
                         break;
                     }
                 }
+
                 //если не найден участник, то добавим новую колонку в конец таблицы и присвоим ей новый номер number_cell_user
                 if (number_cell_user == 0) {
+                    //добавим сразу новую колонку в конец шапки
                     number_cell_user = head_row.cells.length;
                     th_cell = document.createElement('th');
                     head_row.appendChild(th_cell);
                     th_cell.innerHTML = hide_user_row;
+                    //заполню новую колонку пустыми ячейками
                     for (let j = 0; j < tbody.rows.length; j++) {
                         body_row = tbody.rows[j];
                         td_cell = document.createElement('td');
                         body_row.appendChild(td_cell);
                     }
                 }
-                // заполню статичную часть таблицы и добавлю динамические колонки если надо
+                //заполню статичную часть таблицы и добавлю динамические колонки если надо
                 for (let j = 0; j < tbody.rows.length; j++) {
-                    body_row = tbody.rows[j];
+                    body_row = tbody.rows[j]; //текущая строка
                     product_code = body_row.cells[1].innerHTML;
                     cell_server_price = body_row.cells[6];
                     server_price = parseFloat(cell_server_price.innerHTML);
@@ -279,13 +296,6 @@
                         //если цена ниже серверной, то обновлю колонку текущей ценой
                         if (JSON_row['price'] < server_price) {
                             cell_server_price.innerHTML = JSON_row['price'] + '.0';// для красоты зададим имитацию копеек
-                            cell_owner_price_username = body_row.cells[8];
-                            if (username == user_row) {
-                                cell_owner_price_username.innerHTML = user_row;
-                            }
-                            else {
-                                cell_owner_price_username.innerHTML = hide_user_row;
-                            }
                         }
                         // теперь добавлю цены в новые колонки участников, если они есть
                         body_row.cells[number_cell_user].innerHTML = JSON_row['price'];
