@@ -728,6 +728,7 @@ def check_new_price(url_post, tenders_info, list_of_new_prices, username, time_c
         return addition_result
 
     for new_data in list_of_new_prices:
+        number_row = new_data.get('number_row')
         product_code = new_data.get('product_code')
         client_price = new_data.get('client_price')
 
@@ -736,16 +737,15 @@ def check_new_price(url_post, tenders_info, list_of_new_prices, username, time_c
             server_price = server_data.get('price')
 
             if server_product_code == product_code and server_price > client_price:
-                # updated = update_tender(product_code, client_price, url_post, username)
                 updated = add_or_update_tender(product_code, client_price, url_post, username)
 
                 if not updated:  # из-за ошибки при записи в БД тоже добавлю код товара в список непринятых сервером
-                    errors_code_product.append(product_code)
+                    errors_code_product.append(number_row)
                 else:
                     # найдем оставшееся время до закрытия торгов и если последняя ставка сделана в последние 10 минут
                     # то добавим к времени закрытия торгов еще 10 минут
                     time_until_closing = (time_close - datetime.utcnow()).total_seconds()
-                    print(time_until_closing)
+
                     if 0 < time_until_closing < 600:
                         post_info = get_post_by_url(url_post, True)
                         post = post_info.get('object_model')
@@ -755,8 +755,8 @@ def check_new_price(url_post, tenders_info, list_of_new_prices, username, time_c
 
             elif server_product_code == product_code and server_price <= client_price and server_data.get(
                     'owner_price_username') != username:
-                errors_code_product.append(product_code)
-                text_result = 'Коды товаров цены на которые не прошли:'
+                errors_code_product.append(number_row)
+                text_result = 'Товары цены на которые не прошли:'
 
     if len(errors_code_product) == len(list_of_new_prices):
         result = False

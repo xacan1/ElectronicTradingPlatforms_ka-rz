@@ -17,11 +17,6 @@
         Ваш браузер не поддерживает JavaScript или поддержка отключена в настройках.
     </noscript>
     <div class="tender-section">
-        <div class="flash">
-            {% for category, msg in get_flashed_messages(True) %}
-            <p class="flash-msg flash-{{ category }}">{{ msg }}</p>
-            {% endfor %}
-        </div>
         {% if not current_user['confirmed'] %}
         <div>
             <p>Ваша учетная запись ещё не подтверждена. Дождитесь подтверждения или свяжитесь с администратором!</p>
@@ -47,6 +42,11 @@
             {%- else %}
                 <br>
             {% endif -%}
+            {% endfor %}
+        </div>
+        <div class="flash">
+            {% for category, msg in get_flashed_messages(True) %}
+            <p class="flash-msg flash-{{ category }}">{{ msg }}</p>
             {% endfor %}
         </div>
         <div class="tender-goods">
