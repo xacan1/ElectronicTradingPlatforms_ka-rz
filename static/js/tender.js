@@ -111,6 +111,8 @@ function restore_client_prices_from_JSON()
         client_prices = JSON.parse(tender_info_JSON.value);
     }
     for (let j = 1; j < table.rows.length; j++) {
+        table.rows[j].cells[4].innerHTML = number_format(table.rows[j].cells[4].innerHTML, 2, '.', '');
+        table.rows[j].cells[6].innerHTML = number_format(table.rows[j].cells[6].innerHTML, 2, '.', '');
         let product_code = table.rows[j].cells[1].innerHTML;
         let cell_client_price = table.rows[j].cells[10].childNodes[1];
         if (client_prices.length > 0 && client_prices[j-1].product_code == product_code) {

@@ -99,9 +99,9 @@
                         {% endif %}
                         <td class="string-field max-width-column">{{ row.product_name }}</td>
                         <td class="digit-field">{{ row.unit }}</td>
-                        <td class="digit-field dot-two-zero">{{ row.step_price }}</td>
+                        <td class="digit-field">{{ row.step_price }}</td>
                         <td class="digit-field">{{ row.quantity }}</td>
-                        <td class="digit-field one-zero">{{ row.price }}</td>
+                        <td class="digit-field">{{ row.price }}</td>
                         <td class="digit-field"></td>
                         <td class="digit-field hide-column">{{ row.rate_vat }}</td>
                         {% if current_user['access'] or current_user['username'] == row.owner_price_username %}
