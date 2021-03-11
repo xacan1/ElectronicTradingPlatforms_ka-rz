@@ -756,7 +756,7 @@ def check_new_price(url_post, tenders_info, list_of_new_prices, username, time_c
             elif server_product_code == product_code and server_price <= client_price and server_data.get(
                     'owner_price_username') != username:
                 errors_code_product.append(number_row)
-                text_result = 'Товары цены на которые не прошли:'
+                text_result = 'Номера строк товаров цены на которые не прошли:'
 
     if len(errors_code_product) == len(list_of_new_prices):
         result = False
