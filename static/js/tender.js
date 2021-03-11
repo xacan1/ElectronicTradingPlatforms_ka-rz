@@ -138,7 +138,7 @@ function get_current_summ_tender()
     for (let j = 1; j < table.rows.length; j++) {
         summ += parseFloat(table.rows[j].cells[10].childNodes[1].value) * parseFloat(table.rows[j].cells[5].innerHTML);
     }
-    summ_tender.innerHTML = text_label + number_format(summ, 2, '.', '');
+    summ_tender.innerHTML = text_label + number_format(summ, 2, '.', '') + ' руб.';
 }
 //получает текущую сумму тендера по текущим ценам сервера (6 колонка)
 function get_current_server_summ_tender()
@@ -155,7 +155,7 @@ function get_current_server_summ_tender()
         full_sum += row_sum;
     }
 
-    summ_tender.innerHTML = text_label + number_format(full_sum, 2, '.', '');
+    summ_tender.innerHTML = text_label + number_format(full_sum, 2, '.', '') + ' руб.';
 }
 
 function get_url_post() {
