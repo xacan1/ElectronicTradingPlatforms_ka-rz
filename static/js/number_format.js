@@ -30,7 +30,6 @@ function number_format(number, decimals, dec_point, thousands_sep) {
   }
   return s.join(dec);
 }
- 
 //  Пример 1: number_format(1234.56);
 //  Результат: '1,235'
  
