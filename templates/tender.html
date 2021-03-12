@@ -17,11 +17,6 @@
         Ваш браузер не поддерживает JavaScript или поддержка отключена в настройках.
     </noscript>
     <div class="tender-section">
-        <div class="flash">
-            {% for category, msg in get_flashed_messages(True) %}
-            <p class="flash-msg flash-{{ category }}">{{ msg }}</p>
-            {% endfor %}
-        </div>
         {% if not current_user['confirmed'] %}
         <div>
             <p>Ваша учетная запись ещё не подтверждена. Дождитесь подтверждения или свяжитесь с администратором!</p>
@@ -47,6 +42,11 @@
             {%- else %}
                 <br>
             {% endif -%}
+            {% endfor %}
+        </div>
+        <div class="flash">
+            {% for category, msg in get_flashed_messages(True) %}
+            <p class="flash-msg flash-{{ category }}">{{ msg }}</p>
             {% endfor %}
         </div>
         <div class="tender-goods">
@@ -81,6 +81,7 @@
                         <th>Шаг цены</th>
                         <th>Количество</th>
                         <th>Текущая цена</th>
+                        <th>Текущая сумма</th>
                         <th class="hide-column">НДС,%</th>
                         <th>Владелец цены</th>
                         <th>Новая цена</th>
@@ -98,15 +99,12 @@
                         {% endif %}
                         <td class="string-field max-width-column">{{ row.product_name }}</td>
                         <td class="digit-field">{{ row.unit }}</td>
-                        <td class="digit-field dot-two-zero">{{ row.step_price }}</td>
+                        <td class="digit-field">{{ row.step_price }}</td>
                         <td class="digit-field">{{ row.quantity }}</td>
-                        <td class="digit-field one-zero">{{ row.price }}</td>
+                        <td class="digit-field">{{ row.price }}</td>
+                        <td class="digit-field"></td>
                         <td class="digit-field hide-column">{{ row.rate_vat }}</td>
-                        {% if current_user['access'] or current_user['username'] == row.owner_price_username %}
-                        <td class="digit-field">{{ row.owner_price_username }}</td>
-                        {% else %}
-                        <td class="digit-field">Участник #{{ row.owner_price_id }}</td>
-                        {% endif %}
+                        <td class="digit-field"></td>
                         <td class="digit-field">
                             <input name="input{{ row.id }}" oninput="inp_isum(this)" onchange="after_change_price()"
                                    required type="text" size=8>
@@ -144,5 +142,6 @@
         {% endif %}
     </div>
 </section>
+<script src="{{ url_for('static', filename='js/number_format.js') }}"></script>
 <script src="{{ url_for('static', filename='js/tender.js') }}"></script>
 {% endblock %}

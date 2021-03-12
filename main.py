@@ -529,11 +529,6 @@ def show_tender(url_post):
         else:
             form_tender = TenderForm()
 
-            # Уберем корректировку часового пояса на стороне сервера, так как все корректировки у нас на фронте
-            # post_info['time_close'] = models.from_utc0_to_localtime(post_info['time_close'],
-            #                                                         current_user.get('timezone'))
-            # post_info['today'] = models.from_utc0_to_localtime(post_info['today'], current_user.get('timezone'))
-
             if form_tender.validate_on_submit():
                 list_of_new_prices = json.loads(form_tender.tender_info_JSON.data)
 
@@ -568,7 +563,8 @@ def api_post(api_method):
 
     if api_method == 'get_table_tender' and current_user.get('username') and 'url_post' in request.values:
         # получение текущих цен из фронтэнда сюда идет запрос функции ajax_get_current_tenders
-        tenders_info = models.get_tenders_with_owners_price(request.values['url_post'], current_user.get('username'))
+        tenders_info = models.get_tenders_with_owners_price(request.values['url_post'], current_user.get('username'),
+                                                            current_user.get('access'))
         response_JSON = json.dumps(tenders_info)
 
     elif api_method == 'upload_tender_from_1c' and token == app.config.get('TOKEN_API') and request.data:

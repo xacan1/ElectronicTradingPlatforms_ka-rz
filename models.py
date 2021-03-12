@@ -430,12 +430,9 @@ def get_last_tenders(url_post, get_object_model=False):
                 tender_info['price'] = tender.price
                 tender_info['rate_vat'] = tender.rate_vat
                 tender_info['step_price'] = tender.step_price
-                # tender_info['time_bet'] = tender.time_bet # пока что не получается сериализовать датут в JSON
-                # tender_info['post'] = tender.post
                 tender_info['product_code'] = tender.product.product_code
                 tender_info['product_name'] = tender.product.product_name
                 tender_info['unit'] = tender.product.unit
-                # tender_info['owner_price'] = tender.owner_price
                 tender_info['owner_price_id'] = tender.owner_price.id
                 tender_info['owner_price_access'] = tender.owner_price.access
                 tender_info['owner_price_username'] = tender.owner_price.username
@@ -457,11 +454,11 @@ def get_last_tenders(url_post, get_object_model=False):
 
 # получает данные о владельцах цен для формирования колонок и сами цены в том виде в котором они нужны для html формы
 # игнорируя администратра ресурса(Users.access == 0) это нужно для динамического формирования таблицы при торгах
-def get_tenders_with_owners_price(url_post, current_username, get_object_model=False):
+def get_tenders_with_owners_price(url_post, current_username, access, get_object_model=False):
     tenders_info = []
     tender_info = {'id': 0, 'quantity': 0, 'price': 0, 'step_price': 0, 'time_bet': 0, 'product_code': '',
                    'product_name': '', 'unit': '', 'owner_price_id': 0, 'owner_price_username': '',
-                   'owner_price_inn': '', 'time_close': 0, 'current_username': current_username}
+                   'owner_price_inn': '', 'time_close': 0, 'current_username': current_username, 'access': access}
     try:
         query = db.session.query(Tenders)
         query = query.join(Posts, Posts.id == Tenders.post_id)
@@ -486,6 +483,7 @@ def get_tenders_with_owners_price(url_post, current_username, get_object_model=F
                 tender_info['owner_price_username'] = tender.owner_price.username
                 tender_info['time_close'] = tender.post.time_close.strftime(time_str_ISO)
                 tender_info['current_username'] = current_username
+                tender_info['access'] = access
 
                 if get_object_model:
                     tender_info['object_model'] = tender
@@ -728,6 +726,7 @@ def check_new_price(url_post, tenders_info, list_of_new_prices, username, time_c
         return addition_result
 
     for new_data in list_of_new_prices:
+        number_row = new_data.get('number_row')
         product_code = new_data.get('product_code')
         client_price = new_data.get('client_price')
 
@@ -736,16 +735,15 @@ def check_new_price(url_post, tenders_info, list_of_new_prices, username, time_c
             server_price = server_data.get('price')
 
             if server_product_code == product_code and server_price > client_price:
-                # updated = update_tender(product_code, client_price, url_post, username)
                 updated = add_or_update_tender(product_code, client_price, url_post, username)
 
                 if not updated:  # из-за ошибки при записи в БД тоже добавлю код товара в список непринятых сервером
-                    errors_code_product.append(product_code)
+                    errors_code_product.append(number_row)
                 else:
                     # найдем оставшееся время до закрытия торгов и если последняя ставка сделана в последние 10 минут
                     # то добавим к времени закрытия торгов еще 10 минут
                     time_until_closing = (time_close - datetime.utcnow()).total_seconds()
-                    print(time_until_closing)
+
                     if 0 < time_until_closing < 600:
                         post_info = get_post_by_url(url_post, True)
                         post = post_info.get('object_model')
@@ -755,8 +753,8 @@ def check_new_price(url_post, tenders_info, list_of_new_prices, username, time_c
 
             elif server_product_code == product_code and server_price <= client_price and server_data.get(
                     'owner_price_username') != username:
-                errors_code_product.append(product_code)
-                text_result = 'Коды товаров цены на которые не прошли:'
+                errors_code_product.append(number_row)
+                text_result = 'Номера строк товаров цены на которые не прошли:'
 
     if len(errors_code_product) == len(list_of_new_prices):
         result = False
