@@ -1,5 +1,6 @@
 /.idea/
 /venv/
+/__pycache__/
 /wsgi.py
 /etp.db
 /config.py
