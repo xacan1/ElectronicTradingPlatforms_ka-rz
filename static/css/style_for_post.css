@@ -8,8 +8,6 @@
     counter-increment: trCount;
     content:counter(trCount);
 }
-.one-zero:after { content: '0'; }
-.dot-two-zero:after { content: '.00'; }
 .post-section {
     width: 100%;
     border: 1px solid #eee;

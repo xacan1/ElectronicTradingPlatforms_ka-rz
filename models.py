@@ -332,9 +332,10 @@ def get_actual_tender_by_product_code(product_code, get_object_model=False):
 
 # поулчает данные о посте и тендерах(товарах)
 # only_last - определяет все записи получать или только последние
-def get_post_by_url(url_post, get_object_model=False, only_last=False):
+# username - если указан, то получаем данные о ценах участника в этом аукционе, даже если они не лучшие
+def get_post_by_url(url_post, get_object_model=False, only_last=False, username=None):
     post_info = {'title': 'Статья не найдена', 'post': '---', 'author': '---', 'time_post': '---', 'time_start': '---',
-                 'time_close': '---', 'contract_deadline': '---', 'tenders': []}
+                 'time_close': '---', 'contract_deadline': '---', 'tenders': [], 'tenders_of_user': []}
     try:
         query = db.session.query(Posts).filter(Posts.url_post == url_post)
         result = query.first()
@@ -349,6 +350,9 @@ def get_post_by_url(url_post, get_object_model=False, only_last=False):
             post_info['today'] = datetime.utcnow()
             post_info['contract_deadline'] = result.contract_deadline
             post_info['url_post'] = result.url_post
+
+            if username:
+                post_info['tenders_of_user'] = get_last_prices_of_tender_by_user(url_post, username)
 
             if only_last:
                 post_info['tenders'] = get_last_tenders(url_post, get_object_model)
@@ -444,6 +448,48 @@ def get_last_tenders(url_post, get_object_model=False):
                 tenders_info.append(tender_info.copy())
         else:
             tenders_info.append(tender_info)
+
+    except exc.SQLAlchemyError as exp:
+        tenders_info.append(tender_info)
+        print(f'Ошибка при запросе тендеров: {str(exp)}')
+
+    return tenders_info
+
+
+# получает последние цены участника в конкретном аукционе
+# даже если участник не выиграл ни по одной цене, но сделал хоть одну прошедшую ставку, то данные об этом будут получены
+def get_last_prices_of_tender_by_user(url_post, username):
+    tenders_info = []
+    tender_info = {'id': 0, 'quantity': 0, 'price': 0, 'step_price': 0, 'time_bet': 0, 'product_code': '',
+                   'product_name': '', 'unit': '', 'owner_price_username': '', 'owner_price_inn': ''}
+
+    try:
+        query = db.session.query(Tenders)
+        query = query.join(Goods, Goods.id == Tenders.product_id)
+        query = query.join(Posts, Posts.id == Tenders.post_id)
+        query = query.join(Users, Users.id == Tenders.owner_price_id)
+        query = query.filter(and_(Posts.url_post == url_post, Users.username == username))
+        query = query.order_by(Goods.product_code, func.min(Tenders.price))
+        query = query.group_by(Goods.product_code)
+        result = query.first()
+
+        if result is not None:
+            tenders = query.all()
+
+            for tender in tenders:
+                tender_info['id'] = tender.id
+                tender_info['quantity'] = tender.quantity
+                tender_info['price'] = tender.price
+                tender_info['rate_vat'] = tender.rate_vat
+                tender_info['step_price'] = tender.step_price
+                tender_info['product_code'] = tender.product.product_code
+                tender_info['product_name'] = tender.product.product_name
+                tender_info['unit'] = tender.product.unit
+                tender_info['owner_price_id'] = tender.owner_price.id
+                tender_info['owner_price_access'] = tender.owner_price.access
+                tender_info['owner_price_username'] = tender.owner_price.username
+                tender_info['owner_price_inn'] = tender.owner_price.inn
+                tenders_info.append(tender_info.copy())
 
     except exc.SQLAlchemyError as exp:
         tenders_info.append(tender_info)

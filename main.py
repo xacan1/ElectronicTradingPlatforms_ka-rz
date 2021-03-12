@@ -113,18 +113,34 @@ def show_post(url_post=None):
     page = None
     current_user = get_authorization()
     current_year = datetime.now().year
-    post_info = models.get_post_by_url(url_post, False, True)
+    post_info = models.get_post_by_url(url_post, False, True, current_user.get('username'))
 
     if not post_info['tenders']:
         page = redirect(url_for('list_tenders'))
-    # else:
-    # post_info['time_start'] = models.from_utc0_to_localtime(post_info['time_start'], current_user['timezone'])
-    # post_info['time_close'] = models.from_utc0_to_localtime(post_info['time_close'], current_user['timezone'])
 
     if not page:
         page = render_template('post.html', post_info=post_info, title='Информация об аукционе',
                                title_page='Информация об аукционе', current_user=current_user,
                                current_year=current_year)
+
+    return page
+
+
+@app.route('/results_tenders/<url_post>')
+def show_result_tender(url_post=None):
+    page = None
+    current_user = get_authorization()
+    current_year = datetime.now().year
+
+    if not current_user.get('username'):
+        page = redirect(url_for('login'))
+
+    post_info = models.get_post_by_url(url_post, False, True, current_user.get('username'))
+    post_info['today'] = models.from_utc0_to_localtime(post_info['today'], current_user.get('timezone'))
+
+    if not page:
+        page = render_template('result_tender.html', post_info=post_info, title='Результаты торгов',
+                               title_page='Результаты торгов', current_user=current_user, current_year=current_year)
 
     return page
 
