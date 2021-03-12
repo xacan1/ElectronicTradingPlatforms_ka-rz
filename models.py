@@ -454,11 +454,11 @@ def get_last_tenders(url_post, get_object_model=False):
 
 # получает данные о владельцах цен для формирования колонок и сами цены в том виде в котором они нужны для html формы
 # игнорируя администратра ресурса(Users.access == 0) это нужно для динамического формирования таблицы при торгах
-def get_tenders_with_owners_price(url_post, current_username, get_object_model=False):
+def get_tenders_with_owners_price(url_post, current_username, access, get_object_model=False):
     tenders_info = []
     tender_info = {'id': 0, 'quantity': 0, 'price': 0, 'step_price': 0, 'time_bet': 0, 'product_code': '',
                    'product_name': '', 'unit': '', 'owner_price_id': 0, 'owner_price_username': '',
-                   'owner_price_inn': '', 'time_close': 0, 'current_username': current_username}
+                   'owner_price_inn': '', 'time_close': 0, 'current_username': current_username, 'access': access}
     try:
         query = db.session.query(Tenders)
         query = query.join(Posts, Posts.id == Tenders.post_id)
@@ -483,6 +483,7 @@ def get_tenders_with_owners_price(url_post, current_username, get_object_model=F
                 tender_info['owner_price_username'] = tender.owner_price.username
                 tender_info['time_close'] = tender.post.time_close.strftime(time_str_ISO)
                 tender_info['current_username'] = current_username
+                tender_info['access'] = access
 
                 if get_object_model:
                     tender_info['object_model'] = tender

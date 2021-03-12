@@ -245,25 +245,29 @@ function update_data_table(data)
     let cell_server_price, cell_current_price, th_cell, td_cell;
     let server_price, current_price;
     let number_cell_user; //число колонок с участниками(динамические колонки)
-    let hide_user_row, user_row; // скрытое и явное имя пользователя для показа по ситуации
-    users = {}; //объект для записи соответствия представления участника в таблице и его id в базе
+    let hide_user_row; // скрытое имя пользователя для показа пользователю
+    let users = {}; //объект для записи соответствия представления участника в таблице и его id в базе
     let i = 0;
     
     while (i < table_data.length) {
         JSON_row = table_data[i];
         number_cell_user = 0;
         head_row = thead.rows[thead.rows.length - 1];
-        user_row = JSON_row['owner_price_username'];
 
-        hide_user_row = (user_row == username)?username:'Участник ' + String(Object.keys(users).length + 1);
-
+        if (JSON_row['access']) {
+            hide_user_row = JSON_row['owner_price_username'];
+        }
+        else {
+            hide_user_row = (JSON_row['owner_price_username'] == username)?username:'Участник ' + String(Object.keys(users).length + 1);
+        }
+        
         //добавим id пользователя и представление в объект {id = 'Участник №''}
         if (!(JSON_row['owner_price_id'] in users)) {
             users[JSON_row['owner_price_id']] = hide_user_row;
         }
 
         //ищем колонку с текущим участником
-        for (let j = 10; j < head_row.cells.length; j++) {                
+        for (let j = 1; j < head_row.cells.length; j++) {                
             if (head_row.cells[j].innerHTML == users[JSON_row['owner_price_id']]) {
                 number_cell_user = j;
                 break;
@@ -290,14 +294,17 @@ function update_data_table(data)
             product_code = body_row.cells[1].innerHTML;
             cell_server_price = body_row.cells[6];
             server_price = parseFloat(cell_server_price.innerHTML);
-            cell_current_price = body_row.cells[10].childNodes[1];
-            current_price = parseFloat(cell_current_price.value);
-
+            
             // если код товара совпадает, то это наша строка, заполню ее
             if (JSON_row['product_code'] == product_code) {
-                //если цена ниже серверной, то обновлю колонку текущей ценой
+                //обновлю на более низкую цену если она есть
                 if (JSON_row['price'] < server_price) {
                     cell_server_price.innerHTML = number_format(JSON_row['price'], 2, '.', '');
+                    server_price = JSON_row['price'];
+                }
+                //если цена равна серверной, то заполню колонку владельцев цен
+                if (JSON_row['price'] == server_price) {
+                    body_row.cells[9].innerHTML = users[JSON_row['owner_price_id']];
                 }
                 // теперь добавлю цены в новые колонки участников, если они есть
                 body_row.cells[number_cell_user].innerHTML = number_format(JSON_row['price'], 2, '.', '');

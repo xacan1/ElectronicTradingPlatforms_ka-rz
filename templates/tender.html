@@ -104,11 +104,7 @@
                         <td class="digit-field">{{ row.price }}</td>
                         <td class="digit-field"></td>
                         <td class="digit-field hide-column">{{ row.rate_vat }}</td>
-                        {% if current_user['access'] or current_user['username'] == row.owner_price_username %}
-                        <td class="digit-field">{{ row.owner_price_username }}</td>
-                        {% else %}
-                        <td class="digit-field">Участник #{{ row.owner_price_id }}</td>
-                        {% endif %}
+                        <td class="digit-field"></td>
                         <td class="digit-field">
                             <input name="input{{ row.id }}" oninput="inp_isum(this)" onchange="after_change_price()"
                                    required type="text" size=8>
