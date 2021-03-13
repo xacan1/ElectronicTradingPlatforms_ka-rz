@@ -793,7 +793,7 @@ def check_new_price(url_post, tenders_info, list_of_new_prices, username, time_c
     errors_code_product = []  # тут сохраним все коды товаров которые не прошли по цене
 
     if not list_of_new_prices:
-        text_result = 'Нет цен во входящих данных!'
+        text_result = 'Не обнаружены изменения в ценах!'
         result = False
         addition_result = (result, text_result)
         return addition_result

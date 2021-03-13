@@ -553,6 +553,9 @@ def show_tender(url_post):
         else:
             form_tender = TenderForm()
 
+            if not form_tender.tender_info_JSON.data:
+                form_tender.tender_info_JSON.data = '[]'
+
             if form_tender.validate_on_submit():
                 list_of_new_prices = json.loads(form_tender.tender_info_JSON.data)
 
@@ -570,6 +573,8 @@ def show_tender(url_post):
                     flash(msg, category='success')
                 else:
                     flash(msg, category='error')
+
+                return redirect(url_for('show_tender', url_post=url_post))
 
             page = render_template('tender.html', title=f"Закупки по тендеру {post_info.get('title')}",
                                    title_page=f"Закупки по тендеру {post_info.get('title')}", post_info=post_info,
