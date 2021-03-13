@@ -909,34 +909,30 @@ def get_file_user(username, filename):
 
 
 # Для 1С что бы получить список всех существующих тендеров
-def get_all_url_posts():
+def get_all_url_posts(limit_number_posts):
     urls = {}
     try:
-        query = db.session.query(Posts).order_by(Posts.time_post.desc())
+        query = db.session.query(Posts).order_by(Posts.time_post.desc()).limit(limit_number_posts)
 
         if query.first() is not None:
             posts = query.all()
             for post in posts:
                 urls[post.url_post] = post.title
 
-    except exc.SQLAlchemyError as exp:
+    except exc.SQLAlchemyError:
         print('Нет ни одного поста')
 
     return urls
 
 
-def get_posts_announcements():
-    result = []
+def get_list_posts(page, posts_per_page):
+    posts = []
     try:
-        query = db.session.query(Posts).order_by(Posts.time_post.desc()).limit(5)
-
-        if query.first() is not None:
-            result = query.all()
-            # print(result[0].author.username)
-    except exc.SQLAlchemyError as exp:
+        posts = db.session.query(Posts).order_by(Posts.time_post.desc()).paginate(page, posts_per_page, False)
+    except exc.SQLAlchemyError:
         print('Нет ни одного поста')
 
-    return result
+    return posts
 
 
 def create_site_db():

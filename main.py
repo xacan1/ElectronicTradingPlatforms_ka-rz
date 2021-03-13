@@ -54,7 +54,7 @@ def catalog(url_cat=None):
     page = 'catalog.html'
 
     if not url_cat:
-        url_cat = 'repair'  # Анатолий Егоров хочет видеть сразу первую страницу каталога
+        url_cat = 'repair'
 
     if url_cat:
         page = f'{url_cat}.html'
@@ -102,9 +102,13 @@ def contacts():
 def list_tenders():
     current_user = get_authorization()
     current_year = datetime.now().year
+    page = request.args.get('page', 1, type=int)
+    posts = models.get_list_posts(page, app.config.get('POSTS_PER_PAGE'))
+    next_url = url_for('list_tenders', page=posts.next_num) if posts.has_next else None
+    prev_url = url_for('list_tenders', page=posts.prev_num) if posts.has_prev else None
 
     return render_template('list_tenders.html', title='Анонсы тендеров', title_page='Анонсы тендеров',
-                           current_user=current_user, announcements=models.get_posts_announcements(),
+                           current_user=current_user, announcements=posts.items, next_url=next_url, prev_url=prev_url,
                            current_year=current_year)
 
 
@@ -657,7 +661,9 @@ def api_get(api_method, url_post=None):
             response_JSON = json.dumps(post_info, ensure_ascii=False)
 
     elif api_method == 'get_all_url_posts':
-        posts = models.get_all_url_posts()
+        limit_number_posts = request.headers.get('number_posts')
+        limit_number_posts = int(limit_number_posts) if limit_number_posts and limit_number_posts.isdigit() else 30
+        posts = models.get_all_url_posts(limit_number_posts)
         response_JSON = json.dumps(posts, ensure_ascii=False)
 
     return response_JSON

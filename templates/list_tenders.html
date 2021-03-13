@@ -38,6 +38,17 @@
         </div>
     </div>
     {% endfor %}
+    <div class="block-navigation">
+        {% if prev_url %}
+        <a href="{{ prev_url }}">&#10094; Предыдущие записи</a>
+        {% endif %}
+        {% if prev_url and next_url %}
+        <span> . . . . . . . . . . . . </span>
+        {% endif %}
+        {% if next_url %}
+        <a href="{{ next_url }}">Следующие записи &#10095;</a>
+        {% endif %}
+    </div>
 </div>
 <script src="{{ url_for('static', filename='js/set_local_date.js') }}"></script>
 {% endblock %}
