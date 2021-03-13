@@ -34,6 +34,7 @@
                 "Утвердить изменения";</p>
             <p>- После <strong>утверждения</strong> в колонке "Владелец цены" Вы увидите свою учетную запись, при этом
                 сама цена будет подсвечена <strong>зеленым</strong> цветом;</p>
+            <p>- Автоматическое продление: 10 минут с момента подачи последнего предложения;</p>
         </div>
         <div class="text-post">
             {% for litera in post_info['post'] %}
@@ -76,7 +77,7 @@
                         {% else %}
                         <th class="hide-column">Код</th>
                         {% endif %}
-                        <th class="max-width-column">Наименование</th>
+                        <th>Наименование</th>
                         <th>Ед. изм.</th>
                         <th>Шаг цены</th>
                         <th>Количество</th>
@@ -97,7 +98,7 @@
                         {% else %}
                         <td class="string-field hide-column">{{ row.product_code }}</td>
                         {% endif %}
-                        <td class="string-field max-width-column">{{ row.product_name }}</td>
+                        <td class="string-field">{{ row.product_name }}</td>
                         <td class="digit-field">{{ row.unit }}</td>
                         <td class="digit-field">{{ row.step_price }}</td>
                         <td class="digit-field">{{ row.quantity }}</td>

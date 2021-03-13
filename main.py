@@ -135,8 +135,16 @@ def show_result_tender(url_post=None):
     if not current_user.get('username'):
         page = redirect(url_for('login'))
 
+    users_tender = models.get_all_users_in_tender(url_post)
     post_info = models.get_post_by_url(url_post, False, True, current_user.get('username'))
     post_info['today'] = models.from_utc0_to_localtime(post_info['today'], current_user.get('timezone'))
+
+    if users_tender:
+        for tender in post_info['tenders']:
+            tender['serial_number_user'] = users_tender[tender['owner_price_id']]
+    else:
+        for tender in post_info['tenders']:
+            tender['serial_number_user'] = tender['owner_price_id']
 
     if not page:
         page = render_template('result_tender.html', post_info=post_info, title='Результаты торгов',

@@ -42,8 +42,8 @@ td.string-field{
   text-align: left;
   vertical-align: middle;
 }
-table.paleBlueRows tr td.max-width-column{
+/*table.paleBlueRows tr td.max-width-column{
   max-width: 20%;
-  /*word-break: break-all;*/
+  word-break: break-all;
   hyphens: auto;
-}
+} */

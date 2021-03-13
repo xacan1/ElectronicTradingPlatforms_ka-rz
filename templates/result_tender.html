@@ -15,8 +15,8 @@
     <noscript class="warning-noscript">
         Ваш браузер не поддерживает JavaScript или поддержка отключена в настройках.
     </noscript>
-    {% if not post_info['tenders_of_user'] %}
-    <p>Вы не являлись участником данного аукциона. Результаты торгов доступны только участникам</p>
+    {% if not post_info['tenders_of_user'] and not current_user['access'] %}
+    <p>Вы не являлись участником данного аукциона. Результаты торгов доступны только участникам.</p>
     {% elif post_info['today'] > post_info['time_start'] and post_info['today'] < post_info['time_close'] %}
     <p>Торги еще не завершены</p>
     {% elif post_info['today'] < post_info['time_start'] %}
@@ -70,6 +70,7 @@
                 <th class="hide-column">НДС,%</th>
                 <th>Сумма</th>
                 <th>Победитель</th>
+                <th>Ваша цена</th>
             </tr>
             </thead>
             <tbody>
@@ -94,8 +95,13 @@
                 {% if current_user['access'] or row.owner_price_username == current_user['username'] %}
                 <td class="string-field">{{ row.owner_price_username }}</td>
                 {% else %}
-                <td class="string-field">Участник {{ row.id }}</td>
+                <td class="string-field">Участник {{ row.serial_number_user }}</td>
                 {% endif %}
+                {% for row_user in post_info['tenders_of_user'] if row_user.product_code == row.product_code %}
+                <td class="digit-field">{{ '%.2f'|format(row_user.price) }}</td>
+                {% else %}
+                <td class="digit-field"></td>
+                {% endfor %}
             </tr>
             {% endfor %}
             </tbody>

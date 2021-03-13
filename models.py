@@ -498,6 +498,33 @@ def get_last_prices_of_tender_by_user(url_post, username):
     return tenders_info
 
 
+# получает всех участников тендера в порядке времени начала участия
+# для восстановления порядковых номеров как во время торгов
+def get_all_users_in_tender(url_post):
+    users_tender = {}
+
+    try:
+        query = db.session.query(Tenders)
+        query = query.join(Posts, Tenders.post_id == Posts.id)
+        query = query.filter(Posts.url_post == url_post)
+        query = query.order_by(Tenders.time_bet)
+        query = query.group_by(Tenders.owner_price_id)
+        result = query.first()
+
+        if result is not None:
+            tenders = query.all()
+            serial_number = 0
+
+            for tender in tenders:
+                serial_number += 1
+                users_tender[tender.owner_price_id] = serial_number
+
+    except exc.SQLAlchemyError as exp:
+        print(f'Ошибка при запросе участников торгов: {str(exp)}')
+
+    return users_tender
+
+
 # получает данные о владельцах цен для формирования колонок и сами цены в том виде в котором они нужны для html формы
 # игнорируя администратра ресурса(Users.access == 0) это нужно для динамического формирования таблицы при торгах
 def get_tenders_with_owners_price(url_post, current_username, access, get_object_model=False):

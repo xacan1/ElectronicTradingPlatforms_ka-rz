@@ -1,7 +1,7 @@
 .countLines {
     counter-reset: trCount;
     overflow: auto;
-    white-space: nowrap;
+    /*white-space: nowrap;*/
 }
 .countLines tr td:first-child:before {
     position:relative;

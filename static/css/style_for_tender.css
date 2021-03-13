@@ -44,3 +44,8 @@ caption{
 tbody tr:hover,tbody tr:nth-child(even):hover{
     background: #FFF7D1;
 }
+/*table.paleBlueRows tr td.max-width-column{
+  max-width: 20%;
+  word-break: break-all;
+  hyphens: auto;
+} */
