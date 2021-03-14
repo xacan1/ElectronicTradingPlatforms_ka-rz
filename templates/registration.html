@@ -116,6 +116,7 @@
                 <p class="flash-{{ cat }}">{{ msg }}</p>
                 {% endfor -%}
             </div>
+            {{ form.recaptcha }}
             <p>{{ form.submit(class='button-login') }}</p>
         </form>
     </div>

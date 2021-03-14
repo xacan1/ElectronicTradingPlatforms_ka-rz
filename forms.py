@@ -1,4 +1,4 @@
-from flask_wtf import FlaskForm
+from flask_wtf import FlaskForm, RecaptchaField
 from wtforms import StringField, PasswordField, BooleanField, SubmitField, TextAreaField, FieldList, FormField, \
     SelectField, IntegerField, FileField
 from wtforms.fields.html5 import DateField, DateTimeLocalField, TelField
@@ -16,7 +16,7 @@ class LoginForm(FlaskForm):
                                               Length(min=flask_config.MIN_PASSWORD_LENGTH,
                                                      max=flask_config.MAX_PASSWORD_LENGTH,
                                                      message=f'Пароль должен быть от {flask_config.MIN_PASSWORD_LENGTH} до {flask_config.MAX_PASSWORD_LENGTH} символов')])
-    # remember_me = BooleanField('Запомнить меня')
+    recaptcha = RecaptchaField()
     submit = SubmitField('Войти')
 
 
@@ -41,6 +41,7 @@ class RegistrationForm(FlaskForm):
     repeat_psw = PasswordField('Повторите пароль', validators=[InputRequired('Повторите пароль'),
                                                                EqualTo('psw', message='Пароли не совпадают')])
     accept_user_agreement = BooleanField(validators=[InputRequired('Для регистрации нужно принять условия соглашения')])
+    recaptcha = RecaptchaField()
     submit = SubmitField('Зарегистрироваться')
 
 
@@ -91,11 +92,13 @@ class PasswordChangeForm(FlaskForm):
     repeat_new_psw = PasswordField('Повторите новый пароль', validators=[InputRequired('Повторите новый пароль'),
                                                                          EqualTo('new_psw',
                                                                                  message='Пароли не совпадают')])
+    recaptcha = RecaptchaField()
     submit = SubmitField('Изменить пароль')
 
 
 class PasswordRecoveryForm(FlaskForm):
     email = StringField('Email', validators=[InputRequired('Заполните email'), Email('Введен не корректный email')])
+    recaptcha = RecaptchaField()
     submit = SubmitField('Восстановить пароль')
 
 
@@ -108,7 +111,7 @@ class EditProfileForm(FlaskForm):
                                       Length(min=3, message='Наименование компании должно быть не менее 3-х символов')])
     inn = StringField('ИНН компании или ИП', validators=[InputRequired('Заполните ИНН')])
     user_timezone = SelectField('Ваша временная зона UTC', coerce=int, choices=get_timezones(), default=3,
-                           validators=[InputRequired('Повторите пароль')])
+                                validators=[InputRequired('Повторите пароль')])
     confirmed = BooleanField('Учетная запись подтверждена')
     submit = SubmitField('Применить')
 

@@ -35,6 +35,7 @@
                 <p class="invalid-feedback-text">{{ msg }}</p>
                 {% endfor %}
             </div>
+            {{ form.recaptcha }}
             <p>{{ form.submit(class='button-login') }}</p>
             <p class="message">Не зарегистрированы? <a href="{{ url_for('registration') }}"><strong>Создать аккаунт</strong></a></p>
             <p class="message">Забыли пароль? <a href="{{ url_for('password_recovery') }}"><strong>Восстановить доступ</strong></a></p>
