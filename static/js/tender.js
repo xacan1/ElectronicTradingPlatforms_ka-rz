@@ -180,7 +180,6 @@ function ajax_get_current_tenders()
             //reload_data_table(this.response);
             update_data_table(this.response);
             get_current_server_summ_tender();
-            coloring_text_row(this.response);
         }
     }
     let url_request = document.location.protocol + '//' + document.location.host + '/api/get_table_tender';
@@ -244,6 +243,7 @@ function update_data_table(data)
     let JSON_row, head_row, body_row;
     let cell_server_price, cell_current_price, th_cell, td_cell;
     let server_price, current_price;
+    let number_cell_username = 0;// номер колонки текущего пользователя для окрашивания цен
     let number_cell_user; //число колонок с участниками(динамические колонки)
     let hide_user_row; // скрытое имя пользователя для показа пользователю
     let users = {}; //объект для записи соответствия представления участника в таблице и его id в базе
@@ -270,6 +270,9 @@ function update_data_table(data)
         for (let j = 1; j < head_row.cells.length; j++) {                
             if (head_row.cells[j].innerHTML == users[JSON_row['owner_price_id']]) {
                 number_cell_user = j;
+                if (users[JSON_row['owner_price_id']] == username) {
+                    number_cell_username = j;
+                }
                 break;
             }
         }
@@ -281,6 +284,7 @@ function update_data_table(data)
             th_cell = document.createElement('th');
             head_row.appendChild(th_cell);
             th_cell.innerHTML = hide_user_row;
+
             //заполню новую колонку пустыми ячейками
             for (let j = 0; j < tbody.rows.length; j++) {
                 body_row = tbody.rows[j];
@@ -288,6 +292,7 @@ function update_data_table(data)
                 body_row.appendChild(td_cell);
             }
         }
+
         //заполню статичную часть таблицы и добавлю динамические колонки если надо
         for (let j = 0; j < tbody.rows.length; j++) {
             body_row = tbody.rows[j]; //текущая строка
@@ -297,11 +302,13 @@ function update_data_table(data)
             
             // если код товара совпадает, то это наша строка, заполню ее
             if (JSON_row['product_code'] == product_code) {
+
                 //обновлю на более низкую цену если она есть
                 if (JSON_row['price'] < server_price) {
                     cell_server_price.innerHTML = number_format(JSON_row['price'], 2, '.', '');
                     server_price = JSON_row['price'];
                 }
+
                 //если цена равна серверной, то заполню колонку владельцев цен
                 if (JSON_row['price'] == server_price) {
                     body_row.cells[9].innerHTML = users[JSON_row['owner_price_id']];
@@ -312,6 +319,7 @@ function update_data_table(data)
         }
         i++;
     }
+    coloring_table(table, username, number_cell_username);
 }
 //показать таймер обратного отчета до конца торгов
 function show_countdown_timer(final_time)
@@ -331,26 +339,25 @@ function format_time(msec)
     let s = sec-h*3600-m*60;
     return (h<10?"0"+h:h)+" ч. "+(m<10?"0"+m:m)+" мин. "+(s<10?"0"+s:s)+" сек.";
 }
-function coloring_text_row(data)
+//расскрасим цены в таблице
+function coloring_table(table, username, number_cell_username)
 {
-    table_data = JSON.parse(data);
-    
-    if (table_data.length == 0) {
-        return;
-    }
-
-    let username = table_data[0]['current_username'] 
-    let table = document.getElementById('table-goods');
     let cell_owner_price_username;
     let cell_server_price;
+    let cell_column_username;
+
     for (let j = 1; j < table.rows.length; j++) {
         cell_server_price = table.rows[j].cells[6];
         cell_owner_price_username = table.rows[j].cells[9];
+        cell_column_username = table.rows[j].cells[number_cell_username];
+
         if (cell_owner_price_username.innerHTML == username) {
-            cell_server_price.style = 'color: green; transition: color .2s linear;';
+            cell_server_price.style = 'color: green; transition: color .5s linear;';
+            cell_column_username.style = 'color: green; transition: color .5s linear;';
         }
         else {
-            cell_server_price.style = 'color: red; transition: color .2s linear;';
+            cell_server_price.style = 'color: red; transition: color .5s linear;';
+            cell_column_username.style = 'color: red; transition: color .5s linear;';
         }
     }
 }
