@@ -149,22 +149,24 @@ a:hover{
 .grid-footer{
     grid-area: footer;
     display: grid;
-    grid-template-columns: repeat(3, minmax(auto, 256px));
+    grid-template-columns: repeat(7, minmax(auto, 256px));
     grid-template-rows: 1fr 1rem;
     align-items: end;
     background-color: #272727;
     font-size: 0.75rem;
     line-height: 1.5;
     color: #fff;
-    padding: 0 20% 0 20%;
 }
 .footer-map{
     position: absolute;
 }
+.footer-info-col1{
+    grid-column: 3 / 4;
+    text-align: justify;
+}
 @media (max-width: 768px){
     .grid-footer{
         grid-template-columns: repeat(2, minmax(auto, 256px));
-        padding: 0;
     }
     .footer-info-col1{
         display: none;
@@ -185,8 +187,8 @@ a:hover{
     color: #FFF;
 }
 .footer-copyright{
-    grid-column: span 3;
-    /*background-color: #222222;*/
+    grid-column: span 7;
+    background-color: #222222;
     text-align: center;
 }
 .button-small{

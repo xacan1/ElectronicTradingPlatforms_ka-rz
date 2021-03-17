@@ -1,9 +1,9 @@
 /*переопределим положение 3-ей строки главного грида,
  что бы не по центру распологалась карусель, а по всем 3-м колонкам*/
-.content{
+/*.content{
     grid-column: span 4;
     min-width: 0;
-}
+}*/
 .image-slider, .swiper-slide img{
 	min-width: 320px;
     width: 100%;
@@ -72,7 +72,7 @@
 .grid-advantages{
 	display: grid;
 	gap: 5%;
-	padding: 0 20% 2rem 20%;
+	padding: 0 10% 2rem 10%;
 	grid-template-columns: repeat(3, minmax(200px, 1fr));
 	grid-template-rows: 1fr;
 	background-color: #FFF;
@@ -94,7 +94,7 @@
 	display: grid;
 	grid-template-columns: repeat(3, minmax(100px, 1fr));
 	grid-template-rows: 1fr 1fr;
-	padding: 0 20% 7rem 20%;
+	padding: 0 1rem 7rem 1rem;
 	gap: 5%;
 }
 @media (max-width: 768px){
