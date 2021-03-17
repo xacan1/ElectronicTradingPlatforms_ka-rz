@@ -180,14 +180,14 @@ a:hover{
     font-size: 1rem;
 }
 .footer_col{
-    padding: 3rem 0 3rem 1rem;
+    padding: 1rem;
     align-self: start;
 }
 .footer-info-col2 a{
     color: #FFF;
 }
 .footer-copyright{
-    grid-column: span 7;
+    grid-column: span 8;
     background-color: #222222;
     text-align: center;
 }
