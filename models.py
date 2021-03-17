@@ -46,10 +46,12 @@ class Posts(db.Model):
     time_close = db.Column(db.DateTime, default=datetime.utcnow())
     contract_deadline = db.Column(db.DateTime, default=datetime.utcnow())
     url_post = db.Column(db.String(150), nullable=False)
+    is_published = db.Column(db.Boolean, default=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     author = db.relationship('Users', backref=db.backref('posts', lazy='dynamic', cascade='all,delete'))
 
-    def __init__(self, title, post, author, url_post, contract_deadline, time_start, time_close, time_post):
+    def __init__(self, title, post, author, url_post, contract_deadline, time_start, time_close, time_post,
+                 is_published):
         self.title = title
         self.post = post
         self.author = author
@@ -58,6 +60,7 @@ class Posts(db.Model):
         self.time_start = time_start
         self.time_close = time_close
         self.time_post = time_post
+        self.is_published = is_published
 
     def __repr__(self):
         return f'<post {self.id}:{self.title}>'

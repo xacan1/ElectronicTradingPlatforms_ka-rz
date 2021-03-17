@@ -9,10 +9,10 @@ window.onload = function() {
 function decrementPrice(row_btn)
 {
     let current_row = row_btn.parentNode.parentNode;
-    let price_step = parseInt(current_row.cells[4].innerHTML);
-    let current_price = parseFloat(current_row.cells[10].childNodes[1].value);
+    let price_step = parseInt(str_to_number(current_row.cells[4].innerHTML, 'int'));
+    let current_price = parseFloat(parseInt(current_row.cells[10].childNodes[1].value, 'float'));
     if (isNaN(current_price) == true || current_price == 0) {
-        current_price = parseFloat(current_row.cells[6].innerHTML);
+        current_price = parseFloat(parseInt(current_row.cells[6].innerHTML, 'float'));
     }
     let client_price = current_price - price_step;
     current_row.cells[10].childNodes[1].value = client_price;
@@ -71,13 +71,15 @@ function get_client_prices()
     let client_prices = [];
     let price_obj;
     let table = document.getElementById('table-goods');
+
     for (let j = 1; j < table.rows.length; j++) {
         price_obj = {};
         price_obj.number_row = String(j);
         price_obj.product_code = table.rows[j].cells[1].innerHTML;
-        price_obj.client_price = parseFloat(table.rows[j].cells[10].childNodes[1].value);
+        price_obj.client_price = parseFloat(str_to_number(table.rows[j].cells[10].childNodes[1].value, 'float'));
         client_prices.push(price_obj);
     }
+
     return client_prices;
 }
 function after_change_price()
@@ -93,8 +95,8 @@ function check_price_step()
     let table = document.getElementById('table-goods');
     for (let j = 1; j < table.rows.length; j++) {
         let price_step = parseInt(table.rows[j].cells[4].innerHTML);
-        let client_price = parseFloat(table.rows[j].cells[10].childNodes[1].value);
-        let server_price = parseFloat(table.rows[j].cells[6].innerHTML);
+        let client_price = parseFloat(str_to_number(table.rows[j].cells[10].childNodes[1].value));
+        let server_price = parseFloat(str_to_number(table.rows[j].cells[6].innerHTML));
         if (Math.abs(server_price - client_price) < price_step) {
             table.rows[j].cells[10].childNodes[1].value = server_price;
         }
@@ -111,15 +113,15 @@ function restore_client_prices_from_JSON()
         client_prices = JSON.parse(tender_info_JSON.value);
     }
     for (let j = 1; j < table.rows.length; j++) {
-        table.rows[j].cells[4].innerHTML = number_format(table.rows[j].cells[4].innerHTML, 2, '.', '');
-        table.rows[j].cells[6].innerHTML = number_format(table.rows[j].cells[6].innerHTML, 2, '.', '');
+        table.rows[j].cells[4].innerHTML = number_format(table.rows[j].cells[4].innerHTML, 2, ',', ' ');
+        table.rows[j].cells[6].innerHTML = number_format(table.rows[j].cells[6].innerHTML, 2, ',', ' ');
         let product_code = table.rows[j].cells[1].innerHTML;
         let cell_client_price = table.rows[j].cells[10].childNodes[1];
         if (client_prices.length > 0 && client_prices[j-1].product_code == product_code) {
             cell_client_price.value = client_prices[j-1].client_price;
         }
         else {
-            cell_client_price.value = parseFloat(table.rows[j].cells[6].innerHTML);
+            cell_client_price.value = parseFloat(str_to_number(table.rows[j].cells[6].innerHTML, 'float'));
         }
     }
 }
@@ -138,9 +140,9 @@ function get_current_summ_tender()
     let table = document.getElementById('table-goods');
     let summ = 0;
     for (let j = 1; j < table.rows.length; j++) {
-        summ += parseFloat(table.rows[j].cells[10].childNodes[1].value) * parseFloat(table.rows[j].cells[5].innerHTML);
+        summ += parseFloat(str_to_number(table.rows[j].cells[10].childNodes[1].value)) * parseFloat(str_to_number(table.rows[j].cells[5].innerHTML));
     }
-    summ_tender.innerHTML = text_label + number_format(summ, 2, '.', '') + ' руб.';
+    summ_tender.innerHTML = text_label + number_format(summ, 2, ',', ' ') + ' руб.';
 }
 //получает текущую сумму тендера по текущим ценам сервера (6 колонка)
 function get_current_server_summ_tender()
@@ -152,12 +154,12 @@ function get_current_server_summ_tender()
     let row_sum = 0;
 
     for (let j = 1; j < table.rows.length; j++) {
-        row_sum = parseFloat(table.rows[j].cells[6].innerHTML) * parseFloat(table.rows[j].cells[5].innerHTML);
-        table.rows[j].cells[7].innerHTML = number_format(row_sum, 2, '.', '');
+        row_sum = parseFloat(str_to_number(table.rows[j].cells[6].innerHTML)) * parseFloat(str_to_number(table.rows[j].cells[5].innerHTML));
+        table.rows[j].cells[7].innerHTML = number_format(row_sum, 2, ',', ' ');
         full_sum += row_sum;
     }
 
-    summ_tender.innerHTML = text_label + number_format(full_sum, 2, '.', '') + ' руб.';
+    summ_tender.innerHTML = text_label + number_format(full_sum, 2, ',', ' ') + ' руб.';
 }
 
 function get_url_post() {
@@ -211,12 +213,12 @@ function reload_data_table(data)
         for (let j = 1; j < table.rows.length; j++) {
             product_code = table.rows[j].cells[1].innerHTML;
             cell_server_price = table.rows[j].cells[6];
-            server_price = parseFloat(cell_server_price.innerHTML)
+            server_price = parseFloat(str_to_number(cell_server_price.innerHTML))
             cell_current_price = table.rows[j].cells[10].childNodes[1];
-            current_price = parseFloat(cell_current_price.value);
+            current_price = parseFloat(str_to_number(cell_current_price.value));
 
             if (row['product_code'] == product_code) {
-                cell_server_price.innerHTML = number_format(row['price'], 2, '.', '');
+                cell_server_price.innerHTML = number_format(row['price'], 2, ',', ' ');
                 cell_owner_price_username = table.rows[j].cells[10];
                 cell_owner_price_username.innerHTML = row['owner_price_username'];
             }
@@ -289,6 +291,7 @@ function update_data_table(data)
             for (let j = 0; j < tbody.rows.length; j++) {
                 body_row = tbody.rows[j];
                 td_cell = document.createElement('td');
+                td_cell.className = 'no-wrap';
                 body_row.appendChild(td_cell);
             }
         }
@@ -298,14 +301,14 @@ function update_data_table(data)
             body_row = tbody.rows[j]; //текущая строка
             product_code = body_row.cells[1].innerHTML;
             cell_server_price = body_row.cells[6];
-            server_price = parseFloat(cell_server_price.innerHTML);
+            server_price = parseFloat(str_to_number(cell_server_price.innerHTML));
             
             // если код товара совпадает, то это наша строка, заполню ее
             if (JSON_row['product_code'] == product_code) {
 
                 //обновлю на более низкую цену если она есть
                 if (JSON_row['price'] < server_price) {
-                    cell_server_price.innerHTML = number_format(JSON_row['price'], 2, '.', '');
+                    cell_server_price.innerHTML = number_format(JSON_row['price'], 2, ',', ' ');
                     server_price = JSON_row['price'];
                 }
 
@@ -314,7 +317,7 @@ function update_data_table(data)
                     body_row.cells[9].innerHTML = users[JSON_row['owner_price_id']];
                 }
                 // теперь добавлю цены в новые колонки участников, если они есть
-                body_row.cells[number_cell_user].innerHTML = number_format(JSON_row['price'], 2, '.', '');
+                body_row.cells[number_cell_user].innerHTML = number_format(JSON_row['price'], 2, ',', ' ');
             }
         }
         i++;

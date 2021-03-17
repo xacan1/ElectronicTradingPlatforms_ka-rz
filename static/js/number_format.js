@@ -1,3 +1,20 @@
+// type_num - тип возвращаемого числа
+function str_to_number(str_num, type_num)
+{
+  if (type_num == undefined) {
+    type_num = 'float';
+  }
+
+  if (type_num == 'float') {
+    return parseFloat(str_num.replace(/\s/g, '').replace(',', '.'));
+  }
+  else if (type_num == 'int') {
+    return parseInt(str_num.replace(/\s/g, ''));
+  }
+  else {
+    return 0;
+  }
+}
 /***
 number - исходное число
 decimals - количество знаков после разделителя
