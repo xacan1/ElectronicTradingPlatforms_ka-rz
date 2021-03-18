@@ -1,3 +1,14 @@
+window.onload = function()
+    {
+        format_all("number-format");
+    }
+    
+function format_all(class_name) {
+  let elements = document.getElementsByClassName(class_name);
+      for (let i=0; i<elements.length; i++) {
+            elements[i].innerHTML = number_format(elements[i].innerHTML, 2, ',', ' ');
+      }
+}
 // type_num - тип возвращаемого числа
 function str_to_number(str_num, type_num)
 {

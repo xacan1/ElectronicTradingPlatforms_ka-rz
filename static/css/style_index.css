@@ -93,7 +93,7 @@
 .grid-services{
 	display: grid;
 	grid-template-columns: repeat(3, minmax(100px, 1fr));
-	grid-template-rows: 1fr 1fr;
+	grid-template-rows: 1fr;
 	padding: 0 1rem 7rem 1rem;
 	gap: 5%;
 }

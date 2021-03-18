@@ -100,12 +100,12 @@
                         {% endif %}
                         <td class="string-field">{{ row.product_name }}</td>
                         <td class="digit-field">{{ row.unit }}</td>
-                        <td class="digit-field">{{ row.step_price }}</td>
+                        <td class="digit-field no-wrap">{{ row.step_price }}</td>
                         <td class="digit-field">{{ row.quantity }}</td>
-                        <td class="digit-field">{{ row.price }}</td>
-                        <td class="digit-field"></td>
+                        <td class="digit-field no-wrap">{{ row.price }}</td>
+                        <td class="digit-field no-wrap"></td>
                         <td class="digit-field hide-column">{{ row.rate_vat }}</td>
-                        <td class="digit-field"></td>
+                        <td class="digit-field no-wrap"></td>
                         <td class="digit-field">
                             <input name="input{{ row.id }}" oninput="inp_isum(this)" onchange="after_change_price()"
                                    required type="text" size=8>

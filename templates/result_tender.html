@@ -84,21 +84,21 @@
                 {% endif %}
                 <td class="string-field">{{ row.product_name }}</td>
                 <td class="digit-field">{{ row.unit }}</td>
-                <td class="digit-field">{{ '%.2f'|format(row.step_price) }}</td>
+                <td class="digit-field number-format">{{ '%.2f'|format(row.step_price) }}</td>
                 <td class="digit-field">{{ row.quantity }}</td>
                 {% if current_user['access'] or post_info['tenders_of_user'] or post_info['today'] <
                 post_info['time_close'] %}
-                <td class="digit-field">{{ '%.2f'|format(row.price) }}</td>
+                <td class="digit-field number-format">{{ '%.2f'|format(row.price) }}</td>
                 {% endif %}
                 <td class="digit-field hide-column">{{ row.rate_vat }}</td>
-                <td class="digit-field">{{ '%.2f'|format(row.price * row.quantity) }}</td>
+                <td class="digit-field number-format">{{ '%.2f'|format(row.price * row.quantity) }}</td>
                 {% if current_user['access'] or row.owner_price_username == current_user['username'] %}
                 <td class="string-field">{{ row.owner_price_username }}</td>
                 {% else %}
                 <td class="string-field">Участник {{ row.serial_number_user }}</td>
                 {% endif %}
                 {% for row_user in post_info['tenders_of_user'] if row_user.product_code == row.product_code %}
-                <td class="digit-field">{{ '%.2f'|format(row_user.price) }}</td>
+                <td class="digit-field number-format">{{ '%.2f'|format(row_user.price) }}</td>
                 {% else %}
                 <td class="digit-field"></td>
                 {% endfor %}
@@ -115,4 +115,5 @@
     </p>
 </div>
 <script src="{{ url_for('static', filename='js/set_local_date.js') }}"></script>
+<script src="{{ url_for('static', filename='js/number_format.js') }}"></script>
 {% endblock %}

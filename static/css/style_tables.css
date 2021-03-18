@@ -46,6 +46,10 @@ table.paleBlueRows tbody td.no-wrap{
   white-space: nowrap;
   padding: 0 .5rem 0 .5rem;
 }
+table.paleBlueRows thead th.no-wrap{
+  white-space: nowrap;
+  padding: 0 .5rem 0 .5rem;
+}
 /*table.paleBlueRows tr td.max-width-column{
   max-width: 20%;
   word-break: break-all;

@@ -79,10 +79,10 @@
                 {% endif %}
                 <td class="string-field max-width-column">{{ row.product_name }}</td>
                 <td class="digit-field">{{ row.unit }}</td>
-                <td class="digit-field">{{ '%.2f'|format(row.step_price) }}</td>
+                <td class="digit-field number-format">{{ '%.2f'|format(row.step_price) }}</td>
                 <td class="digit-field">{{ row.quantity }}</td>
                 {% if current_user['access'] or post_info['today'] < post_info['time_close'] %}
-                <td class="digit-field">{{ '%.2f'|format(row.price) }}</td>
+                <td class="digit-field number-format">{{ '%.2f'|format(row.price) }}</td>
                 {% endif %}
                 <td class="digit-field">{{ row.rate_vat }}</td>
                 {% if current_user['access'] %}
@@ -120,4 +120,5 @@
     </p>
 </div>
 <script src="{{ url_for('static', filename='js/set_local_date.js') }}"></script>
+<script src="{{ url_for('static', filename='js/number_format.js') }}"></script>
 {% endblock %}

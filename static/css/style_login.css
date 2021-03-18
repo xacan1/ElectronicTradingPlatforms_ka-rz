@@ -74,3 +74,7 @@ div.my-checkbox label{
 	cursor: pointer;
 	position: relative;
 }
+#accept_user_agreement{
+  transform: scale(1.5);
+  cursor: pointer;
+}

@@ -142,6 +142,8 @@ def show_result_tender(url_post=None):
     users_tender = models.get_all_users_in_tender(url_post)
     post_info = models.get_post_by_url(url_post, False, True, current_user.get('username'))
     post_info['today'] = models.from_utc0_to_localtime(post_info['today'], current_user.get('timezone'))
+    post_info['time_close'] = models.from_utc0_to_localtime(post_info['time_close'], current_user.get('timezone'))
+    post_info['time_start'] = models.from_utc0_to_localtime(post_info['time_start'], current_user.get('timezone'))
 
     if users_tender:
         for tender in post_info['tenders']:

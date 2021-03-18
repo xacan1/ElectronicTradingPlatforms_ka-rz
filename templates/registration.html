@@ -105,12 +105,20 @@
                 {{ error }}
                 {% endfor -%}
             </p>
-            <span>С <a href="{{ url_for('user_agreement') }}" target="_blank"><strong>условиями</strong></a> использования
-                ресурсов сайта ознакомлен и согласен{{ form.accept_user_agreement(class='invalid-feedback-field') }}</span>
+            <div>{{ form.accept_user_agreement(class='invalid-feedback-field') }}С <a
+                    href="{{ url_for('user_agreement') }}" target="_blank"><strong>условиями</strong></a> использования
+                ресурсов сайта ознакомлен и согласен
+            </div>
+             <br>
             {% else -%}
-            <span>С <a href="{{ url_for('user_agreement') }}" target="_blank"><strong>условиями</strong></a> использования
-                ресурсов сайта ознакомлен и согласен{{ form.accept_user_agreement() }}</span>
+            <div>{{ form.accept_user_agreement() }}</div>
+            <div>С <a href="{{ url_for('user_agreement') }}"
+                                target="_blank"><strong>условиями</strong></a> использования
+                ресурсов сайта ознакомлен и согласен
+            </div>
+             <br>
             {% endif -%}
+
             <div class="flash">
                 {% for cat, msg in get_flashed_messages(True) -%}
                 <p class="flash-{{ cat }}">{{ msg }}</p>
