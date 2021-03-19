@@ -17,9 +17,9 @@
     </noscript>
     {% if not post_info['tenders_of_user'] and not current_user['access'] %}
     <p>Вы не являлись участником данного аукциона. Результаты торгов доступны только участникам.</p>
-    {% elif post_info['today'] > post_info['time_start'] and post_info['today'] < post_info['time_close'] %}
+    {% elif post_info['today'] > post_info['time_start_local'] and post_info['today'] < post_info['time_close_local'] %}
     <p>Торги еще не завершены</p>
-    {% elif post_info['today'] < post_info['time_start'] %}
+    {% elif post_info['today'] < post_info['time_start_local'] %}
     <p>Торги еще не начались</p>
     {% else %}
     <h1 class="title-post">
@@ -88,10 +88,10 @@
                 <td class="digit-field">{{ row.quantity }}</td>
                 {% if current_user['access'] or post_info['tenders_of_user'] or post_info['today'] <
                 post_info['time_close'] %}
-                <td class="digit-field number-format">{{ '%.2f'|format(row.price) }}</td>
+                <td class="digit-field number-format no-wrap">{{ '%.2f'|format(row.price) }}</td>
                 {% endif %}
                 <td class="digit-field hide-column">{{ row.rate_vat }}</td>
-                <td class="digit-field number-format">{{ '%.2f'|format(row.price * row.quantity) }}</td>
+                <td class="digit-field number-format no-wrap">{{ '%.2f'|format(row.price * row.quantity) }}</td>
                 {% if current_user['access'] or row.owner_price_username == current_user['username'] %}
                 <td class="string-field">{{ row.owner_price_username }}</td>
                 {% else %}
@@ -114,6 +114,5 @@
         </button>
     </p>
 </div>
-<script src="{{ url_for('static', filename='js/set_local_date.js') }}"></script>
-<script src="{{ url_for('static', filename='js/number_format.js') }}"></script>
+<script src="{{ url_for('static', filename='js/format_data_on_page.js') }}"></script>
 {% endblock %}

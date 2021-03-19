@@ -1,7 +1,7 @@
 window.onload = function()
-    {
-        setDatesToElementsByClassName("iso-data");
-    }
+{
+    date_format("iso-data");
+}
 //устанавливает форматированные локальные даты в каждый эелемент из массива id
 function setDatesToElements(ids)
 {
@@ -12,7 +12,7 @@ function setDatesToElements(ids)
 	}
 }
 //ищет все элементы класса и меняет дату на локальную
-function setDatesToElementsByClassName(class_name)
+function date_format(class_name)
 {
       let elements = document.getElementsByClassName(class_name);
       for (let i=0; i<elements.length; i++) {

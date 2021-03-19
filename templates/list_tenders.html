@@ -27,7 +27,7 @@
             <span class="announcement-time">от <span class="iso-data">{{ announcement['time_start'].strftime('%Y-%m-%dT%H:%M:%SZ') }}</span></span>
             {% endif %}
         </p>
-        <p class="announcement-text">{{ announcement['post'][:50] }}...</p>
+        <p class="announcement-text">{{ announcement['post'][:300] }}...</p>
         <p class="announcement-deadline">Срок исполнения контракта: <span class="iso-data">{{
             announcement['contract_deadline'] }}</span></p>
         <div class="button-show-post">
@@ -50,5 +50,5 @@
         {% endif %}
     </div>
 </div>
-<script src="{{ url_for('static', filename='js/set_local_date.js') }}"></script>
+<script src="{{ url_for('static', filename='js/format_data_on_page.js') }}"></script>
 {% endblock %}

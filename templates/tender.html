@@ -39,9 +39,9 @@
         <div class="text-post">
             {% for litera in post_info['post'] %}
             {%- if litera != '\n' -%}
-                {{ litera }}
+            {{ litera }}
             {%- else %}
-                <br>
+            <br>
             {% endif -%}
             {% endfor %}
         </div>
@@ -51,7 +51,10 @@
             {% endfor %}
         </div>
         <div class="tender-goods">
-            <span id="label_current_summ_tender">Общая сумма Вашего предложения:</span>
+            <p>Время начала торгов: <span
+                    class="iso-data">{{ post_info['time_start'].strftime('%Y-%m-%dT%H:%M:%SZ') }}</span>, время закрытия
+                торгов: <span class="iso-data">{{ post_info['time_close'].strftime('%Y-%m-%dT%H:%M:%SZ') }}</span></p>
+            <p id="label_current_summ_tender">Общая сумма Вашего предложения:</p>
             <p id="label_server_summ_tender">Текущая сумма тендера:</p>
             <p id="label_time_close">Время закрытия торгов: {{ post_info['time_close'] }}</p>
             <form class="send-new-price" action="{{ url_for('show_tender', url_post=post_info['url_post']) }}"
@@ -143,6 +146,6 @@
         {% endif %}
     </div>
 </section>
-<script src="{{ url_for('static', filename='js/number_format.js') }}"></script>
+<script src="{{ url_for('static', filename='js/format_data_on_page.js') }}"></script>
 <script src="{{ url_for('static', filename='js/tender.js') }}"></script>
 {% endblock %}

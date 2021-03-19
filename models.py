@@ -46,7 +46,7 @@ class Posts(db.Model):
     time_close = db.Column(db.DateTime, default=datetime.utcnow())
     contract_deadline = db.Column(db.DateTime, default=datetime.utcnow())
     url_post = db.Column(db.String(150), nullable=False)
-    is_published = db.Column(db.Boolean, default=True)
+    is_published = db.Column(db.Boolean, default=False, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     author = db.relationship('Users', backref=db.backref('posts', lazy='dynamic', cascade='all,delete'))
 
@@ -810,7 +810,7 @@ def check_new_price(url_post, tenders_info, list_of_new_prices, username, time_c
             server_product_code = server_data.get('product_code')
             server_price = server_data.get('price')
 
-            if server_product_code == product_code and server_price > client_price:
+            if server_product_code == product_code and server_price > client_price > 0:
                 updated = add_or_update_tender(product_code, client_price, url_post, username)
 
                 if not updated:  # из-за ошибки при записи в БД тоже добавлю код товара в список непринятых сервером
@@ -929,7 +929,7 @@ def get_all_url_posts(limit_number_posts):
 
 
 def get_list_posts(page, posts_per_page):
-    posts = []
+    posts = {}
     try:
         posts = db.session.query(Posts).order_by(Posts.time_post.desc()).paginate(page, posts_per_page, False)
     except exc.SQLAlchemyError:

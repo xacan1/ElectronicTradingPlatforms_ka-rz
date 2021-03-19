@@ -1,13 +1,46 @@
 window.onload = function()
-    {
-        format_all("number-format");
-    }
+{
+  date_format_on_page("iso-data");
+  number_format_on_page("number-format");
+}
     
-function format_all(class_name) {
+function setDatesToElements(ids)
+{
+  for (let i=0; i<ids.length; i++) {
+    let elem_date = document.getElementById(ids[i]);
+    let date = new Date(elem_date.innerHTML);
+    elem_date.innerHTML = formatDate(date);
+  }
+}
+
+//ищет все элементы класса и меняет дату на локальную
+function date_format_on_page(class_name)
+{
   let elements = document.getElementsByClassName(class_name);
-      for (let i=0; i<elements.length; i++) {
-            elements[i].innerHTML = number_format(elements[i].innerHTML, 2, ',', ' ');
-      }
+  for (let i=0; i<elements.length; i++) {
+    elements[i].innerHTML = formatDate(new Date(elements[i].innerHTML));
+  }
+}
+
+//дата в стандарте Ecma 402
+function formatDate(date)
+{
+  let options = {
+    year: 'numeric',
+    month: 'numeric', //long
+    day: 'numeric',
+    timezone: 'UTC',
+    hour: 'numeric',
+    minute: 'numeric'
+  };
+  return date.toLocaleString('ru', options);
+}
+
+function number_format_on_page(class_name) {
+  let elements = document.getElementsByClassName(class_name);
+    for (let i=0; i<elements.length; i++) {
+      elements[i].innerHTML = number_format(elements[i].innerHTML, 2, ',', ' ');
+    }
 }
 // type_num - тип возвращаемого числа
 function str_to_number(str_num, type_num)
@@ -41,8 +74,7 @@ function number_format(number, decimals, dec_point, thousands_sep) {
     s = '',
     toFixedFix = function(n, prec) {
       let k = Math.pow(10, prec);
-      return '' + (Math.round(n * k) / k)
-        .toFixed(prec);
+      return '' + (Math.round(n * k) / k).toFixed(prec);
     };
   // Fix for IE parseFloat(0.55).toFixed(0) = 0;
   s = (prec ? toFixedFix(n, prec) : '' + Math.round(n))

@@ -5,6 +5,7 @@ window.onload = function() {
     ajax_get_current_tenders();
     let timer_refresh = setInterval(ajax_get_current_tenders, 2000);
     let timer_clear_flash = setTimeout(clear_flash_message, 8000);
+    date_format_on_page("iso-data");
 }
 function decrementPrice(row_btn)
 {

@@ -80,15 +80,6 @@ def catalog(url_cat=None):
                            current_year=current_year)
 
 
-@app.route('/documents')
-def documents():
-    current_user = get_authorization()
-    current_year = datetime.now().year
-
-    return render_template('documents.html', title='Раскрытие информации', title_page='Раскрытие информации',
-                           current_user=current_user, current_year=current_year)
-
-
 @app.route('/contacts')
 def contacts():
     current_user = get_authorization()
@@ -104,11 +95,12 @@ def list_tenders():
     current_year = datetime.now().year
     page = request.args.get('page', 1, type=int)
     posts = models.get_list_posts(page, app.config.get('POSTS_PER_PAGE'))
-    next_url = url_for('list_tenders', page=posts.next_num) if posts.has_next else None
-    prev_url = url_for('list_tenders', page=posts.prev_num) if posts.has_prev else None
+    announcements = posts.items if posts else []
+    next_url = url_for('list_tenders', page=posts.next_num) if posts and posts.has_next else None
+    prev_url = url_for('list_tenders', page=posts.prev_num) if posts and posts.has_prev else None
 
     return render_template('list_tenders.html', title='Анонсы тендеров', title_page='Анонсы тендеров',
-                           current_user=current_user, announcements=posts.items, next_url=next_url, prev_url=prev_url,
+                           current_user=current_user, announcements=announcements, next_url=next_url, prev_url=prev_url,
                            current_year=current_year)
 
 
@@ -142,8 +134,8 @@ def show_result_tender(url_post=None):
     users_tender = models.get_all_users_in_tender(url_post)
     post_info = models.get_post_by_url(url_post, False, True, current_user.get('username'))
     post_info['today'] = models.from_utc0_to_localtime(post_info['today'], current_user.get('timezone'))
-    post_info['time_close'] = models.from_utc0_to_localtime(post_info['time_close'], current_user.get('timezone'))
-    post_info['time_start'] = models.from_utc0_to_localtime(post_info['time_start'], current_user.get('timezone'))
+    post_info['time_start_local'] = models.from_utc0_to_localtime(post_info['time_start'], current_user.get('timezone'))
+    post_info['time_close_local'] = models.from_utc0_to_localtime(post_info['time_close'], current_user.get('timezone'))
 
     if users_tender:
         for tender in post_info['tenders']:
