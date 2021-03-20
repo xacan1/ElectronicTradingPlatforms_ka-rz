@@ -338,7 +338,8 @@ def get_actual_tender_by_product_code(product_code, get_object_model=False):
 # username - если указан, то получаем данные о ценах участника в этом аукционе, даже если они не лучшие
 def get_post_by_url(url_post, get_object_model=False, only_last=False, username=None):
     post_info = {'title': 'Статья не найдена', 'post': '---', 'author': '---', 'time_post': '---', 'time_start': '---',
-                 'time_close': '---', 'contract_deadline': '---', 'tenders': [], 'tenders_of_user': []}
+                 'time_close': '---', 'contract_deadline': '---', 'is_published': False, 'tenders': [],
+                 'tenders_of_user': []}
     try:
         query = db.session.query(Posts).filter(Posts.url_post == url_post)
         result = query.first()
@@ -353,6 +354,7 @@ def get_post_by_url(url_post, get_object_model=False, only_last=False, username=
             post_info['today'] = datetime.utcnow()
             post_info['contract_deadline'] = result.contract_deadline
             post_info['url_post'] = result.url_post
+            post_info['is_published'] = result.is_published
 
             if username:
                 post_info['tenders_of_user'] = get_last_prices_of_tender_by_user(url_post, username)
@@ -575,7 +577,8 @@ def get_tenders_with_owners_price(url_post, current_username, access, get_object
     return tenders_info
 
 
-def add_post_in_db(title, text_post, username, contract_deadline, time_start, time_close, list_of_products):
+def add_post_in_db(title, text_post, username, contract_deadline, time_start, time_close, is_published,
+                   list_of_products):
     text_result = 'Объявление о тендере успешно добавлено.'
     addition_result = (True, text_result)
     now = datetime.utcnow()
@@ -596,7 +599,8 @@ def add_post_in_db(title, text_post, username, contract_deadline, time_start, ti
                 text_result = 'Статья с таким url уже существует!'
                 addition_result = (False, text_result)
             else:
-                post = Posts(title, text_post, author, url_post, contract_deadline, time_start, time_close, now)
+                post = Posts(title, text_post, author, url_post, contract_deadline, time_start, time_close, now,
+                             is_published)
                 db.session.add(post)
                 db.session.flush()
 
@@ -629,8 +633,8 @@ def add_post_in_db(title, text_post, username, contract_deadline, time_start, ti
     return addition_result
 
 
-def update_post_and_tender(title, text_post, username, contract_deadline, time_start, time_close, list_of_products_new,
-                           url_post):
+def update_post_and_tender(title, text_post, username, contract_deadline, time_start, time_close, is_published,
+                           list_of_products_new, url_post):
     text_result = 'Изменения записаны.'
     addition_result = (True, text_result)
     user_info = get_info_by_username(username, True)
@@ -656,6 +660,7 @@ def update_post_and_tender(title, text_post, username, contract_deadline, time_s
             post.post = text_post
             post.url_post = url_post_new
             post.author = author
+            post.is_published = is_published
 
             # удалю все тендеры
             for row_product in post_info.get('tenders'):
@@ -928,14 +933,22 @@ def get_all_url_posts(limit_number_posts):
     return urls
 
 
-def get_list_posts(page, posts_per_page):
-    posts = {}
+# only_active - только активные тендера
+def get_list_posts(page, posts_per_page, only_active=False, not_published=False):
+    page_of_posts = {}
     try:
-        posts = db.session.query(Posts).order_by(Posts.time_post.desc()).paginate(page, posts_per_page, False)
+        if only_active:
+            now = datetime.utcnow()
+            page_of_posts = db.session.query(Posts).filter(
+                and_(Posts.time_start < now, Posts.time_close > now, Posts.is_published != not_published)).order_by(
+                Posts.time_post.desc()).paginate(page, posts_per_page, False)
+        else:
+            page_of_posts = db.session.query(Posts).filter(Posts.is_published != not_published).order_by(
+                Posts.time_post.desc()).paginate(page, posts_per_page, False)
     except exc.SQLAlchemyError:
         print('Нет ни одного поста')
 
-    return posts
+    return page_of_posts
 
 
 def create_site_db():

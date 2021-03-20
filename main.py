@@ -89,15 +89,23 @@ def contacts():
                            current_year=current_year)
 
 
-@app.route('/list_tenders')
+@app.route('/list_tenders/')
 def list_tenders():
     current_user = get_authorization()
     current_year = datetime.now().year
     page = request.args.get('page', 1, type=int)
-    posts = models.get_list_posts(page, app.config.get('POSTS_PER_PAGE'))
+    only_active = request.args.get('only_active', None, type=bool)
+    not_published = request.args.get('not_published', 0, type=int)
+
+    if not current_user.get('access'):
+        not_published = 0
+
+    posts = models.get_list_posts(page, app.config.get('POSTS_PER_PAGE'), only_active, not_published)
     announcements = posts.items if posts else []
-    next_url = url_for('list_tenders', page=posts.next_num) if posts and posts.has_next else None
-    prev_url = url_for('list_tenders', page=posts.prev_num) if posts and posts.has_prev else None
+    next_url = url_for('list_tenders', not_published=not_published, only_active=only_active,
+                       page=posts.next_num) if posts and posts.has_next else None
+    prev_url = url_for('list_tenders', not_published=not_published, only_active=only_active,
+                       page=posts.prev_num) if posts and posts.has_prev else None
 
     return render_template('list_tenders.html', title='Анонсы тендеров', title_page='Анонсы тендеров',
                            current_user=current_user, announcements=announcements, next_url=next_url, prev_url=prev_url,
@@ -456,7 +464,8 @@ def add_tender():
                                                 current_user.get('username'),
                                                 form_add_edit_tender.contract_deadline.data,
                                                 form_add_edit_tender.time_start.data,
-                                                form_add_edit_tender.time_close.data, list_of_products)
+                                                form_add_edit_tender.time_close.data,
+                                                form_add_edit_tender.is_published.data, list_of_products)
 
             if result:
                 flash(msg, category='success')
@@ -489,7 +498,8 @@ def edit_tender(url_post):
                                                         current_user['username'],
                                                         form_add_edit_tender.contract_deadline.data,
                                                         form_add_edit_tender.time_start.data,
-                                                        form_add_edit_tender.time_close.data, list_of_products,
+                                                        form_add_edit_tender.time_close.data,
+                                                        form_add_edit_tender.is_published.data, list_of_products,
                                                         url_post)
 
             if result:
@@ -507,6 +517,7 @@ def edit_tender(url_post):
                                                                              current_user['timezone'])
         form_add_edit_tender.contract_deadline.data = post_info['contract_deadline']
         form_add_edit_tender.post.data = post_info['post']
+        form_add_edit_tender.is_published.data = post_info['is_published']
         form_add_edit_tender.list_products_JSON.data = json.dumps(post_info['tenders'])
 
     return render_template('add_edit_tender.html', title='Изменение тендера', title_page='Изменение тендера',
@@ -605,12 +616,14 @@ def api_post(api_method):
             result, msg = models.update_post_and_tender(tender_data.get('title'), tender_data.get('post'),
                                                         tender_data.get('username'),
                                                         contract_deadline, time_start, time_close,
+                                                        tender_data.get('is_published'),
                                                         tender_data.get('list_of_products'),
                                                         tender_data.get('url_post'))
         else:
             result, msg = models.add_post_in_db(tender_data.get('title'), tender_data.get('post'),
                                                 tender_data.get('username'),
                                                 contract_deadline, time_start, time_close,
+                                                tender_data.get('is_published'),
                                                 tender_data.get('list_of_products'))
 
         response_JSON = json.dumps(msg, ensure_ascii=False)

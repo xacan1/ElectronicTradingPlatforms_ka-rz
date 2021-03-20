@@ -15,6 +15,15 @@
     <noscript class="warning-noscript">
         Ваш браузер не поддерживает JavaScript или поддержка отключена в настройках.
     </noscript>
+    <div class="block-filter">
+        <a href="{{ url_for('list_tenders') }}">Показать все тендеры</a>
+        <span> . . . </span>
+        <a href="{{ url_for('list_tenders', only_active=True) }}">Показать только активные</a>
+        {% if current_user['access'] %}
+        <span> . . . </span>
+        <a href="{{ url_for('list_tenders', not_published=1) }}">Показать скрытые</a>
+        {% endif %}
+    </div>
     {% for announcement in announcements %}
     <div class="announcement-section">
         <p class="announcement-title">

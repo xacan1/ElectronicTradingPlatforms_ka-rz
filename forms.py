@@ -74,6 +74,7 @@ class AddEditPostForm(FlaskForm):
     list_products_JSON = StringField('Скрытое поле для отправки JSON на сервер из формы',
                                      validators=[InputRequired('Не добавлены товары!')])
     product_fields = FieldList(FormField(FieldsProduct), min_entries=1, label='Product')
+    is_published = BooleanField(label='Опубликовать.')
     submit = SubmitField('Добавить / изменить тендер')
 
 

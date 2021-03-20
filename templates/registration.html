@@ -109,14 +109,13 @@
                     href="{{ url_for('user_agreement') }}" target="_blank"><strong>условиями</strong></a> использования
                 ресурсов сайта ознакомлен и согласен
             </div>
-             <br>
+            <br>
             {% else -%}
-            <div>{{ form.accept_user_agreement() }}</div>
-            <div>С <a href="{{ url_for('user_agreement') }}"
-                                target="_blank"><strong>условиями</strong></a> использования
+            <div>{{ form.accept_user_agreement() }}С <a
+                    href="{{ url_for('user_agreement') }}" target="_blank"><strong>условиями</strong></a> использования
                 ресурсов сайта ознакомлен и согласен
             </div>
-             <br>
+            <br>
             {% endif -%}
 
             <div class="flash">

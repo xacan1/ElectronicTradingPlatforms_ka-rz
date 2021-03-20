@@ -34,7 +34,14 @@
     font-size: 0.8rem;
     padding: 1rem 0 0 2rem;
 }
-.block-navigation{
+.block-navigation,.block-filter{
     text-align: center;
     padding: 0 0 1rem 0;
+}
+.block-filter{
+	border-top: 1px outset #EEEEEF;
+	font-size: 1rem;
+	background-color: #FDFDFF;
+	padding: .5rem 0 .5rem 0;
+	border-bottom: 1px inset #EEEEEF;
 }
