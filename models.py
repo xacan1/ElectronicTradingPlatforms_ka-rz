@@ -848,32 +848,36 @@ def check_new_price(url_post, tenders_info, list_of_new_prices, username, time_c
 
 
 # type_file: 1 - аватар, 2 - документ (pdf, jpg)
-def add_file_user(file, name_file, username, type_file):
+def add_file_user(file, name_file, username, type_file, max_count_files):
     text_result = 'Файл загружен'
     uploaded = True
-    addition_result = (uploaded, text_result)
 
-    user_info = get_info_by_username(username, True)
-    user_id = user_info.get('id')
-    user = user_info.get('object_model')
-    try:
-        query = db.session.query(Files).filter(and_(Files.owner_file_id == user_id, Files.name_file == name_file))
-        result = query.first()
+    files_info = get_files_user(username)
 
-        if result is not None:
-            result.file = file
-            db.session.commit()
-        else:
-            file_db = Files(file, name_file, type_file, user)
-            db.session.add(file_db)
-            db.session.commit()
-
-    except exc.SQLAlchemyError as exp:
+    if len(files_info) >= max_count_files:
+        text_result = f'Запрещено загружать более {max_count_files} файлов'
         uploaded = False
-        text_result = 'Не удалось загрузить файл'
-        addition_result = (uploaded, text_result)
+    else:
+        user_info = get_info_by_username(username, True)
+        user_id = user_info.get('id')
+        user = user_info.get('object_model')
+        try:
+            query = db.session.query(Files).filter(and_(Files.owner_file_id == user_id, Files.name_file == name_file))
+            result = query.first()
 
-    return addition_result
+            if result is not None:
+                result.file = file
+                db.session.commit()
+            else:
+                file_db = Files(file, name_file, type_file, user)
+                db.session.add(file_db)
+                db.session.commit()
+
+        except exc.SQLAlchemyError as exp:
+            text_result = 'Не удалось загрузить файл'
+            uploaded = False
+
+    return uploaded, text_result
 
 
 def delete_file_user(username, file_id):
@@ -899,7 +903,7 @@ def delete_file_user(username, file_id):
     return deleted, text_result
 
 
-# получаем все файлы пользователя id:имя файла
+# получаем все файлы пользователя в словаре - id файла:имя файла
 def get_files_user(username):
     files_info = {}
     try:
@@ -922,8 +926,6 @@ def get_files_user(username):
 
 def get_file_user_by_file_id(file_id):
     file_data = {'file': None, 'name_file': ''}
-    # user_info = get_info_by_username(username, True)
-    # user_id = user_info.get('id')
     try:
         query = db.session.query(Files).filter(Files.id == file_id)
         result = query.first()

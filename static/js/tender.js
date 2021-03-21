@@ -292,7 +292,7 @@ function update_data_table(data)
             for (let j = 0; j < tbody.rows.length; j++) {
                 body_row = tbody.rows[j];
                 td_cell = document.createElement('td');
-                td_cell.className = 'no-wrap';
+                td_cell.className = 'no-wrap digit-field';
                 body_row.appendChild(td_cell);
             }
         }

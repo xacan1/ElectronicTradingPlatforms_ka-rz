@@ -95,20 +95,20 @@
                     <tbody>
                     {% for row in post_info['tenders'] if row.id != 0 %}
                     <tr>
-                        <td class="digit-field"></td>
+                        <td class="neitral-field"></td>
                         {% if current_user['access'] %}
                         <td class="string-field">{{ row.product_code }}</td>
                         {% else %}
                         <td class="string-field hide-column">{{ row.product_code }}</td>
                         {% endif %}
                         <td class="string-field">{{ row.product_name }}</td>
-                        <td class="digit-field">{{ row.unit }}</td>
+                        <td class="neitral-field">{{ row.unit }}</td>
                         <td class="digit-field no-wrap">{{ row.step_price }}</td>
                         <td class="digit-field">{{ row.quantity }}</td>
                         <td class="digit-field no-wrap">{{ row.price }}</td>
                         <td class="digit-field no-wrap"></td>
                         <td class="digit-field hide-column">{{ row.rate_vat }}</td>
-                        <td class="digit-field no-wrap"></td>
+                        <td class="string-field no-wrap"></td>
                         <td class="digit-field">
                             <input name="input{{ row.id }}" oninput="inp_isum(this)" onchange="after_change_price()"
                                    required type="text" size=8>

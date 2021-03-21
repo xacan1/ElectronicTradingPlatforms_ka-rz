@@ -16,12 +16,12 @@
         Ваш браузер не поддерживает JavaScript или поддержка отключена в настройках.
     </noscript>
     <div class="block-filter">
-        <a href="{{ url_for('list_tenders') }}">Показать все тендеры</a>
-        <span> . . . </span>
-        <a href="{{ url_for('list_tenders', only_active=True) }}">Показать только активные</a>
+        <a class="button-small pure-button" href="{{ url_for('list_tenders') }}">Показать все тендеры</a>
+        <a class="button-small pure-button" href="{{ url_for('list_tenders', only_active=True) }}">Показать
+            только активные</a>
         {% if current_user['access'] %}
-        <span> . . . </span>
-        <a href="{{ url_for('list_tenders', not_published=1) }}">Показать скрытые</a>
+        <a class="button-small pure-button" href="{{ url_for('list_tenders', not_published=1) }}">Показать
+            черновики</a>
         {% endif %}
     </div>
     {% for announcement in announcements %}
@@ -52,7 +52,7 @@
         <a href="{{ prev_url }}">&#10094; Предыдущие записи</a>
         {% endif %}
         {% if prev_url and next_url %}
-        <span> . . . . . . . . . . . . </span>
+        <!-- <span> . . . . . . . . . . . . </span> -->
         {% endif %}
         {% if next_url %}
         <a href="{{ next_url }}">Следующие записи &#10095;</a>

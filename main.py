@@ -360,8 +360,8 @@ def upload_files():
         data_upload = form_upload_files.file.data
         file = data_upload.read()
         filename = data_upload.filename
-        # filename = models.transliterate(data_upload.filename)  # проблемы с кириллицей так что преобразуем имя файла
-        uploaded, msg = models.add_file_user(file, filename, current_user.get('username'), 2)
+        uploaded, msg = models.add_file_user(file, filename, current_user.get('username'), 2,
+                                             app.config.get('MAX_COUNT_FILES_PER_ACCOUNT'))
 
         if uploaded:
             flash(msg, category='success')

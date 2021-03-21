@@ -34,14 +34,27 @@
     font-size: 0.8rem;
     padding: 1rem 0 0 2rem;
 }
-.block-navigation,.block-filter{
+.block-navigation{
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: 1fr;
+    column-gap: 3rem;
     text-align: center;
-    padding: 0 0 1rem 0;
+    padding: .5rem 0 .5rem 0;
+    border-top: 2px outset #EEEEEF;
+    background-color: #FDFDFF;
+    border-bottom: 2px inset #EEEEEF;
+    margin: .5rem;
 }
 .block-filter{
-	border-top: 1px outset #EEEEEF;
-	font-size: 1rem;
-	background-color: #FDFDFF;
-	padding: .5rem 0 .5rem 0;
-	border-bottom: 1px inset #EEEEEF;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: 1fr;
+    column-gap: 1rem;
+    text-align: center;
+    border-top: 1px outset #EEEEEF;
+    font-size: 1rem;
+    background-color: #FDFDFF;
+    padding: .5rem 0 .5rem 0;
+    border-bottom: 1px inset #EEEEEF;
 }
