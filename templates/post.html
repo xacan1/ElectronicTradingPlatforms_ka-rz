@@ -113,7 +113,7 @@
             Редактировать тендер
         </button>
         <button class="pure-button"
-                onclick="window.location.href = '{{ url_for('delete_tender', url_post=post_info['url_post']) }}';">
+                onclick="if (confirm('Удалить тендер?')) { window.location.href = '{{ url_for('delete_tender', url_post=post_info['url_post']) }}' } else { return False };">
             Удалить тендер
         </button>
         {% endif %}

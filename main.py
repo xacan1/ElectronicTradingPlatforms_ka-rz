@@ -354,11 +354,13 @@ def upload_files():
     current_year = datetime.now().year
     current_user = get_authorization()
     form_upload_files = UploadFilesForm()
+    files_info = models.get_files_user(current_user.get('username'))
 
     if form_upload_files.validate_on_submit():
         data_upload = form_upload_files.file.data
         file = data_upload.read()
-        filename = models.transliterate(data_upload.filename)  # проблемы с кириллицей так что преобразуем имя файла
+        filename = data_upload.filename
+        # filename = models.transliterate(data_upload.filename)  # проблемы с кириллицей так что преобразуем имя файла
         uploaded, msg = models.add_file_user(file, filename, current_user.get('username'), 2)
 
         if uploaded:
@@ -366,20 +368,39 @@ def upload_files():
         else:
             flash(msg, category='error')
 
-    return render_template('upload_files.html', title='Загрузка файла', title_page='Загрузка файла',
+        return redirect(url_for('upload_files'))
+
+    return render_template('upload_files.html', title='Файлы', title_page='Файлы', files=files_info,
                            current_user=current_user, form=form_upload_files, current_year=current_year)
 
 
-@app.route('/download_files/<username>/<filename>')
-def download_files(username, filename):
+@app.route('/download_files/<username>/<file_id>')
+def download_files(username, file_id):
     current_user = get_authorization()
 
     if not current_user.get('access') and username != current_user.get('username'):
         abort(401)
 
-    file_data = models.get_file_user(username, filename)
+    file_data = models.get_file_user_by_file_id(file_id)
 
-    return send_file(BytesIO(file_data), attachment_filename=filename, as_attachment=True)
+    return send_file(BytesIO(file_data['file']), attachment_filename=file_data['name_file'], as_attachment=True)
+
+
+@app.route('/delete_file/<username>/<file_id>')
+def delete_file(username, file_id):
+    current_user = get_authorization()
+
+    if not current_user.get('access') and username != current_user.get('username'):
+        abort(401)
+
+    deleted, msg = models.delete_file_user(username, file_id)
+
+    if deleted:
+        flash(msg, category='success')
+    else:
+        flash(msg, category='error')
+
+    return redirect(url_for('upload_files'))
 
 
 @app.route('/profile/<username>')

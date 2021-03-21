@@ -29,9 +29,30 @@
                     <li>Устав (первые 3 страницы)</li>
                     <li>Выписка из ЕГРЮЛ</li>
                 </ol>
-                <p class="small-text">Загружать файлы можно в любой последовательности, файлы будут доступены в профиле
-                    Личного кабинета. Размер каждого файла не должен превышать <strong>10Мб</strong>. Имена файлов при
-                    загрузке будут изменены согласно правилам траслитерации.</p>
+                <p class="small-text">Загружать файлы можно в любой последовательности. Размер каждого файла не должен
+                    превышать <strong>{{ (config['MAX_CONTENT_LENGTH'] / 1024 / 1024) | round | int }} Мб</strong>.</p>
+            </div>
+            <div class="block-user-files">
+                <table class="table-user-files">
+                    <caption>Список файлов пользователя</caption>
+                    <thead>
+                    <tr>
+                        <th>Наименование файла</th>
+                        <th>Удалить</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for key in files %}
+                    <tr>
+                        <td><a href="{{ url_for('download_files', username=current_user['username'], file_id=key) }}">{{
+                            files[key] }}</a></td>
+                        <td class="cell-button"><a class="button-small pure-button"
+                                                   href="{{ url_for('delete_file', username=current_user['username'], file_id=key) }}">X</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
             </div>
             <form class="pure-form upload-file-form" action="{{ url_for('upload_files') }}" method="post"
                   enctype="multipart/form-data" novalidate>

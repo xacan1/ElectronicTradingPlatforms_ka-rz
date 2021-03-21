@@ -21,17 +21,22 @@ table{
 }
 thead{
     background: #FAFAFA;
+    text-align: center;
 }
 th{
     border: 2px solid #EEEEEE;
     padding: .5rem;
 }
-tr:hover{
+tbody tr:hover{
     background: #EEEEEE;
 }
 td{
     border: 1px solid #EEEEEE;
     padding: .5rem;
+}
+td.cell-button{
+    text-align: center;
+    padding: 1rem 0 1rem 0;
 }
 .list-licoming li{
 	list-style-type: disc;

@@ -126,7 +126,7 @@ class Files(db.Model):
     name_file = db.Column(db.String(255), nullable=False)
     type_file = db.Column(db.Integer, default=0)
     owner_file_id = db.Column(db.Integer, db.ForeignKey('users.id'))
-    owner_file = db.relationship('Users', backref=db.backref('files', lazy='dynamic'))
+    owner_file = db.relationship('Users', backref=db.backref('files', lazy='dynamic', cascade='all,delete'))
 
     def __init__(self, file, name_file, type_file, owner_file):
         self.file = file
@@ -876,44 +876,66 @@ def add_file_user(file, name_file, username, type_file):
     return addition_result
 
 
-# получаем все файлы пользователя
-def get_files_user(username):
-    files_info = []
-    user_info = get_info_by_username(username, True)
-    user_id = user_info.get('id')
+def delete_file_user(username, file_id):
+    text_result = 'Файл удален'
+    deleted = True
     try:
-        query = db.session.query(Files).filter(Files.owner_file_id == user_id)
+        query = db.session.query(Files)
+        query = query.join(Users, Users.id == Files.owner_file_id)
+        query = query.filter(and_(Users.username == username, Files.id == file_id))
+        result = query.first()
+
+        if result is not None:
+            db.session.delete(result)
+            db.session.commit()
+        else:
+            text_result = 'Не удалось удалить файл'
+            deleted = False
+
+    except exc.SQLAlchemyError as exp:
+        text_result = 'Не удалось удалить файл'
+        deleted = False
+
+    return deleted, text_result
+
+
+# получаем все файлы пользователя id:имя файла
+def get_files_user(username):
+    files_info = {}
+    try:
+        query = db.session.query(Files)
+        query = query.join(Users, Users.id == Files.owner_file_id)
+        query = query.filter(Users.username == username)
         result = query.first()
 
         if result is not None:
             files = query.all()
 
             for file in files:
-                files_info.append(file.name_file)
-        else:
-            files_info.append('---')
+                files_info[file.id] = file.name_file
 
     except exc.SQLAlchemyError as exp:
-        files_info.append('---')
+        print('Не удалось получить файлы пользователя')
 
     return files_info
 
 
-def get_file_user(username, filename):
-    file = None
-    user_info = get_info_by_username(username, True)
-    user_id = user_info.get('id')
+def get_file_user_by_file_id(file_id):
+    file_data = {'file': None, 'name_file': ''}
+    # user_info = get_info_by_username(username, True)
+    # user_id = user_info.get('id')
     try:
-        query = db.session.query(Files).filter(and_(Files.owner_file_id == user_id, Files.name_file == filename))
+        query = db.session.query(Files).filter(Files.id == file_id)
         result = query.first()
 
         if result is not None:
-            file = result.file
+            file_data['file'] = result.file
+            file_data['name_file'] = result.name_file
 
     except exc.SQLAlchemyError as exp:
         print(f'Ошибка: {str(exp)}')
 
-    return file
+    return file_data
 
 
 # Для 1С что бы получить список всех существующих тендеров
