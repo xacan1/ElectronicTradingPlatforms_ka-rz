@@ -45,6 +45,15 @@ def about():
                            current_year=current_year)
 
 
+@app.route('/information_disclosure')
+def information_disclosure():
+    current_user = get_authorization()
+    current_year = datetime.now().year
+
+    return render_template('information_disclosure.html', title='Раскрытие информации', title_page='Раскрытие информации',
+                           current_user=current_user, current_year=current_year)
+
+
 @app.route('/catalog/<url_cat>')
 @app.route('/catalog')
 def catalog(url_cat=None):

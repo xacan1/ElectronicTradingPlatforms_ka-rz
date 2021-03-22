@@ -40,17 +40,6 @@
         мощности, разрабатывает новые продукты, инновационные технологические процессы, что в свою очередь позволяет
         непрерывно расширять перечень производимой продукции и предлагаемых услуг.
     </p>
-    <h2>Раскрытие информации:</h2>
-    <ol>
-		<li>
-			<a href="{{ url_for('static', filename='downloads/устав.zip') }}" download="">Устав</a>
-		</li>
-		<li>
-			<a href="{{ url_for('static', filename='downloads/решение №1.pdf') }}" download="">Решение №1</a>
-		</li>
-		<li>
-			<a href="{{ url_for('static', filename='downloads/ОГРН.pdf') }}" download="">ОГРН</a>
-		</li>
-    </ol>
+    <a href="{{ url_for('information_disclosure') }}">РАСКРЫТИЕ ИНФОРМАЦИИ</a>
 </div>
 {% endblock %}

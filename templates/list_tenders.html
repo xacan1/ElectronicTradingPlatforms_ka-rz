@@ -16,12 +16,16 @@
         Ваш браузер не поддерживает JavaScript или поддержка отключена в настройках.
     </noscript>
     <div class="block-filter">
-        <a class="button-small pure-button" href="{{ url_for('list_tenders') }}">Показать все тендеры</a>
-        <a class="button-small pure-button" href="{{ url_for('list_tenders', only_active=True) }}">Показать
-            только активные</a>
+        <button class="button-small pure-button" onclick="window.location.href = '{{ url_for('list_tenders') }}';">
+            Показать все тендеры
+        </button>
+        <button class="button-small pure-button"
+                onclick="window.location.href = '{{ url_for('list_tenders', only_active=True) }}';">Показать все тендеры
+        </button>
         {% if current_user['access'] %}
-        <a class="button-small pure-button" href="{{ url_for('list_tenders', not_published=1) }}">Показать
-            черновики</a>
+        <button class="button-small pure-button"
+                onclick="window.location.href = '{{ url_for('list_tenders', not_published=1) }}';">Показать черновики
+        </button>
         {% endif %}
     </div>
     {% for announcement in announcements %}
