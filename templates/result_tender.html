@@ -98,7 +98,7 @@
                 <td class="string-field">Участник {{ row.serial_number_user }}</td>
                 {% endif %}
                 {% for row_user in post_info['tenders_of_user'] if row_user.product_code == row.product_code %}
-                <td class="digit-field number-format">{{ '%.2f'|format(row_user.price) }}</td>
+                <td class="digit-field number-format no-wrap">{{ '%.2f'|format(row_user.price) }}</td>
                 {% else %}
                 <td class="digit-field"></td>
                 {% endfor %}
