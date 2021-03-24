@@ -45,6 +45,10 @@ function number_format_on_page(class_name) {
 // type_num - тип возвращаемого числа
 function str_to_number(str_num, type_num)
 {
+  if (!str_num) {
+    return 0;
+  }
+
   if (type_num == undefined) {
     type_num = 'float';
   }

@@ -534,11 +534,13 @@ def get_all_users_in_tender(url_post):
 # игнорируя администратра ресурса(Users.access == 0) это нужно для динамического формирования таблицы при торгах
 # функцией JS ajax_get_current_tenders
 def get_tenders_with_owners_price(url_post, current_username, current_access, get_object_model=False):
-    tenders_info = []
+    tenders_users = []  # здесь строки всех участников кроме текущего
+    tenders_info = []  # здесь строки всех участников, но впереди идут строки текущего участника, если они есть
     tender_info = {'id': 0, 'quantity': 0, 'price': 0, 'step_price': 0, 'time_bet': 0, 'product_code': '',
                    'product_name': '', 'unit': '', 'owner_price_id': 0, 'owner_price_username': '',
                    'owner_price_access': 0, 'owner_price_inn': '', 'time_close': 0,
                    'current_username': current_username, 'current_access': current_access}
+
     try:
         query = db.session.query(Tenders)
         query = query.join(Posts, Posts.id == Tenders.post_id)
@@ -569,7 +571,12 @@ def get_tenders_with_owners_price(url_post, current_username, current_access, ge
                 if get_object_model:
                     tender_info['object_model'] = tender
 
-                tenders_info.append(tender_info.copy())
+                if tender_info['owner_price_username'] == current_username:
+                    tenders_info.append(tender_info.copy())
+                else:
+                    tenders_users.append(tender_info.copy())
+
+            tenders_info.extend(tenders_users)  # присоединю к текщему пользователю всех остальных
         else:
             tenders_info.append(tender_info)
 

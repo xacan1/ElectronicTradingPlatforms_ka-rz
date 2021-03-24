@@ -50,7 +50,8 @@ def information_disclosure():
     current_user = get_authorization()
     current_year = datetime.now().year
 
-    return render_template('information_disclosure.html', title='Раскрытие информации', title_page='Раскрытие информации',
+    return render_template('information_disclosure.html', title='Раскрытие информации',
+                           title_page='Раскрытие информации',
                            current_user=current_user, current_year=current_year)
 
 
@@ -634,7 +635,6 @@ def api_post(api_method):
         tenders_info = models.get_tenders_with_owners_price(request.values['url_post'], current_user.get('username'),
                                                             current_user.get('access'))
         response_JSON = json.dumps(tenders_info)
-
     elif api_method == 'upload_tender_from_1c' and token == app.config.get('TOKEN_API') and request.data:
         tender_data = request.get_json()  # json.loads(request.data)  # распарсим тело запроса в словарь
         post_info = models.get_post_by_url(tender_data.get('url_post'), False, True)
