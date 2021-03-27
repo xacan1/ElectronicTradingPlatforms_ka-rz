@@ -179,13 +179,19 @@ def login():
     if current_user['username']:
         page = redirect(url_for('profile', username=current_user['username']))
     elif form_login.validate_on_submit():
-        user_info = models.get_info_by_username(form_login.username.data)
+        username = form_login.username.data
+
+        if '@' in form_login.username.data:
+            user_info = models.get_info_by_email(form_login.username.data)
+            username = user_info.get('username')
+        else:
+            user_info = models.get_info_by_username(form_login.username.data)
+
         pass_ok = check_password_hash(user_info['psw'], form_login.psw.data)
 
         if user_info['id'] > 0 and pass_ok:
-            login_user(form_login.username.data, user_info['access'], user_info['timezone'],
-                       user_info['confirmation_code'])
-            page = redirect(url_for('profile', username=form_login.username.data))
+            login_user(username, user_info['access'], user_info['timezone'], user_info['confirmation_code'])
+            page = redirect(url_for('profile', username=username))
         else:
             flash('Пользователя с таким логином или паролем не существует!', category='error')
 
@@ -212,7 +218,7 @@ def registration():
 
     if form_registration.validate_on_submit():
         if not models.check_latin(form_registration.username.data):
-            flash('Логин должен быть на латинице! Допускаются цифры и нижнее подчеркивание', category='error')
+            flash('Логин должен быть на латинице! Допускаются буквы, цифры и нижнее подчеркивание', category='error')
         elif form_registration.psw.data.isalpha() or form_registration.psw.data.isdigit():
             flash('Пароль должен содержать буквы и цифры!', category='error')
         else:
@@ -286,14 +292,21 @@ def password_recovery():
         email = form_password_recovery.email.data
         new_password = str(random.randint(1, 9)).join(random.choices(string.ascii_lowercase + string.digits, k=3))
         hash_psw = generate_password_hash(new_password)
+        user_info = models.get_info_by_email(email, True)
         result, msg = models.update_password(new_psw=hash_psw, email=email)
 
         if result:
             flash(msg, category='success')
-            message = f'Ваш новый пароль: {new_password}'
+            message = f"""
+            <p>Добрый день,</p>
+            <p>с Вашего электронного адреса был выполнен запрос на восстановление доступа к порталу www.ka-rz.ru</p>
+            <p>Для восстановления доступа к порталу направляем Вам обновленные данные:</p>
+            <p>Логин: {user_info.get('username')}</p>
+            <p>Новый пароль: {new_password}</p>
+            <p>Внимание, данное сообщение сформировано автоматически и не требует ответа.</p>
+            """
             email_sender = EmailSender(app.config.get('MAIL_USERNAME'), app.config.get('MAIL_PASSWORD'), email,
-                                       'Восстановление пароля ka-rz.ru',
-                                       'team.ka-rz.ru')
+                                       'Восстановление пароля ka-rz.ru', 'team.ka-rz.ru')
             email_sender.send_message(message)
         else:
             flash(msg, category='error')

@@ -20,19 +20,16 @@ class EmailSender:
         # msg['From'] = f'{self.sender_name} <{self.login}>'
         msg['From'] = '{} <{}>'.format(self.sender_name, self.login)
         msg['To'] = self.addr_to
-
-        html_msg = """
+        html_msg = f"""
         <html>
         <head>
         <meta charset="utf-8">
         </head>
         <body>
-        <p>
-            <b>{}</b>
-        </p>
+            {message}
         </body>
         </html>
-        """.format(message)
+        """
         part1 = MIMEText(message.encode('utf-8'), 'plain', 'utf-8')
         part2 = MIMEText(html_msg, 'html')
         msg.attach(part1)

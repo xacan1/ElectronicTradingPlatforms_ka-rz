@@ -63,11 +63,11 @@
                 <th class="hide-column">Код</th>
                 {% endif %}
                 <th>Наименование</th>
-                <th>Ед. изм.</th>
-                <th>Шаг цены</th>
                 <th>Количество</th>
+                <th>Ед. изм.</th>
                 <th>Цена</th>
                 <th class="hide-column">НДС,%</th>
+                <th>Шаг цены</th>
                 <th>Сумма</th>
                 <th>Победитель</th>
                 <th>Ваша цена</th>
@@ -83,14 +83,14 @@
                 <td class="string-field hide-column">{{ row.product_code }}</td>
                 {% endif %}
                 <td class="string-field">{{ row.product_name }}</td>
-                <td class="neitral-field">{{ row.unit }}</td>
-                <td class="digit-field number-format">{{ '%.2f'|format(row.step_price) }}</td>
                 <td class="digit-field">{{ row.quantity }}</td>
+                <td class="neitral-field">{{ row.unit }}</td>
                 {% if current_user['access'] or post_info['tenders_of_user'] or post_info['today'] <
                 post_info['time_close'] %}
                 <td class="digit-field number-format no-wrap">{{ '%.2f'|format(row.price) }}</td>
                 {% endif %}
                 <td class="digit-field hide-column">{{ row.rate_vat }}</td>
+                <td class="digit-field number-format">{{ '%.2f'|format(row.step_price) }}</td>
                 <td class="digit-field number-format no-wrap">{{ '%.2f'|format(row.price * row.quantity) }}</td>
                 {% if current_user['access'] or row.owner_price_username == current_user['username'] %}
                 <td class="string-field">{{ row.owner_price_username }}</td>

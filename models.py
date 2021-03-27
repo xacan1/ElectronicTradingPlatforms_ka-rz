@@ -209,6 +209,8 @@ def get_info_by_email(email, get_object_model=False):
             user_info['inn'] = result.inn
             user_info['timezone'] = result.timezone
             user_info['psw'] = result.psw
+            user_info['confirmation_code'] = result.confirmation_code
+
             if get_object_model:
                 user_info['object_model'] = result
 

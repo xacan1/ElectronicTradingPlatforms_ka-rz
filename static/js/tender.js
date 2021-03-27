@@ -1,13 +1,13 @@
 const num_product_code = 1;
 const num_product_name = 2;
-const num_unit = 3;
-const num_price_step = 4;
-const num_quantity = 5;
-const num_server_price = 6;
-const num_summ = 7;
-const num_rate_vat = 8;
-const num_owner_price_username = 9;
-const num_new_user_price = 10;
+const num_quantity = 3;
+const num_unit = 4;
+const num_server_price = 5;
+const num_summ = 6;
+const num_rate_vat = 7;
+const num_owner_price_username = 8;
+const num_price_step = 10;
+const num_new_user_price = 11;
 const num_server_user_price = 12;
 
 window.onload = function() {
@@ -156,7 +156,6 @@ function get_user_summ_tender(username)
     if (head_row.cells[num_server_user_price].innerHTML == username) {
         for (let j = 1; j < table.rows.length; j++) {
             summ += str_to_number(table.rows[j].cells[num_server_user_price].innerHTML, 'float') * str_to_number(table.rows[j].cells[num_quantity].innerHTML, 'int');
-            console.log(table.rows[j].cells[num_server_user_price].innerHTML);
         }
 
     }
@@ -363,10 +362,11 @@ function show_countdown_timer(final_time)
 function format_time(msec)
 {
     let sec = Math.round(msec/1000);
-    let h = sec/3600 ^ 0;
-    let m = (sec-h*3600)/60 ^ 0;
-    let s = sec-h*3600-m*60;
-    return (h<10?"0"+h:h)+" ч. "+(m<10?"0"+m:m)+" мин. "+(s<10?"0"+s:s)+" сек.";
+    let d = sec/86400 ^ 0;
+    let h = (sec-d*86400)/3600 ^ 0;
+    let m = (sec-d*86400-h*3600)/60 ^ 0;
+    let s = sec-d*86400-h*3600-m*60;
+    return (d==0?"":d+" д. ")+(h<10?"0"+h:h)+" ч. "+(m<10?"0"+m:m)+" мин. "+(s<10?"0"+s:s)+" сек.";
 }
 //расскрасим цены в таблице
 function coloring_table(table, username, number_cell_username)

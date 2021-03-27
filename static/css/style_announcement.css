@@ -58,3 +58,10 @@
     padding: .5rem 0 .5rem 0;
     border-bottom: 1px inset #EEEEEF;
 }
+.block-welocome{
+    font-size: .75rem;
+    text-align: justify;
+    border-top: 2px outset #EEEEEF;
+    background-color: #FDFDFF;
+    border-bottom: 2px inset #EEEEEF;
+}

@@ -46,8 +46,11 @@
                     <tr>
                         <td><a href="{{ url_for('download_files', username=current_user['username'], file_id=key) }}">{{
                             files[key] }}</a></td>
-                        <td class="cell-button"><a class="button-small pure-button"
-                                                   href="{{ url_for('delete_file', username=current_user['username'], file_id=key) }}">X</a>
+                        <td class="cell-button">
+                            <button class="button-small pure-button"
+                                    onclick="if (confirm('Удалить файл?')) { window.location.href = '{{ url_for('delete_file', username=current_user['username'], file_id=key) }}' } else { return False };">
+                                X
+                            </button>
                         </td>
                     </tr>
                     {% endfor %}

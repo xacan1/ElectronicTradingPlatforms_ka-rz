@@ -56,13 +56,13 @@
                 <th class="hide-column">Код</th>
                 {% endif %}
                 <th class="max-width-column">Наименование</th>
-                <th>Ед. изм.</th>
-                <th>Шаг цены</th>
                 <th>Количество</th>
+                <th>Ед. изм.</th>
                 {% if current_user['access'] or post_info['today'] < post_info['time_close'] %}
                 <th>Цена</th>
                 {% endif %}
                 <th>НДС,%</th>
+                <th>Шаг цены</th>
                 {% if current_user['access'] %}
                 <th>Участник</th>
                 {% endif %}
@@ -78,13 +78,13 @@
                 <td class="string-field hide-column">{{ row.product_code }}</td>
                 {% endif %}
                 <td class="string-field max-width-column">{{ row.product_name }}</td>
-                <td class="neitral-field">{{ row.unit }}</td>
-                <td class="digit-field number-format">{{ '%.2f'|format(row.step_price) }}</td>
                 <td class="digit-field">{{ row.quantity }}</td>
+                <td class="neitral-field">{{ row.unit }}</td>
                 {% if current_user['access'] or post_info['today'] < post_info['time_close'] %}
                 <td class="digit-field number-format no-wrap">{{ '%.2f'|format(row.price) }}</td>
                 {% endif %}
                 <td class="digit-field">{{ row.rate_vat }}</td>
+                <td class="digit-field number-format">{{ '%.2f'|format(row.step_price) }}</td>
                 {% if current_user['access'] %}
                 <td class="string-field">{{ row.owner_price_username }}</td>
                 {% endif %}

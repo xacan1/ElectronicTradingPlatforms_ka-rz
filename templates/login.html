@@ -16,9 +16,9 @@
                     {{ error }}
                     {% endfor %}
             </span>
-            <p>{{ form.username(size=32, placeholder='Логин', class='invalid-feedback-field') }}</p>
+            <p>{{ form.username(size=32, placeholder='Логин или email', class='invalid-feedback-field') }}</p>
             {% else -%}
-            <p>{{ form.username(size=32, placeholder='Логин') }}</p>
+            <p>{{ form.username(size=32, placeholder='Логин или email') }}</p>
             {% endif -%}
             {% if form.psw.errors -%}
             <span class="invalid-feedback-text">

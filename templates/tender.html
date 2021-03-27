@@ -81,15 +81,15 @@
                         <th class="hide-column">Код</th>
                         {% endif %}
                         <th>Наименование</th>
-                        <th>Ед. изм.</th>
-                        <th>Шаг цены</th>
                         <th>Количество</th>
+                        <th>Ед. изм.</th>
                         <th>Текущая цена</th>
                         <th>Текущая сумма</th>
                         <th class="hide-column">НДС,%</th>
                         <th>Владелец цены</th>
-                        <th>Новая цена</th>
                         <th>Изменение цены</th>
+                        <th>Шаг цены</th>
+                        <th>Новая цена</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -102,21 +102,21 @@
                         <td class="string-field hide-column">{{ row.product_code }}</td>
                         {% endif %}
                         <td class="string-field">{{ row.product_name }}</td>
-                        <td class="neitral-field">{{ row.unit }}</td>
-                        <td class="digit-field no-wrap">{{ row.step_price }}</td>
                         <td class="digit-field">{{ row.quantity }}</td>
+                        <td class="neitral-field">{{ row.unit }}</td>
                         <td class="digit-field no-wrap">{{ row.price }}</td>
                         <td class="digit-field no-wrap"></td>
                         <td class="digit-field hide-column">{{ row.rate_vat }}</td>
                         <td class="string-field no-wrap"></td>
-                        <td class="digit-field">
-                            <input name="input{{ row.id }}" oninput="inp_isum(this)" onchange="after_change_price()"
-                                   required type="text" size=8>
-                        </td>
                         <td>
                             <button class="button-small pure-button button-decrement-price" name="decrement_price"
                                     onclick="decrementPrice(this);return false;">Снизить цену
                             </button>
+                        </td>
+                        <td class="digit-field no-wrap">{{ row.step_price }}</td>
+                        <td class="digit-field">
+                            <input name="input{{ row.id }}" oninput="inp_isum(this)" onchange="after_change_price()"
+                                   required type="text" size=8>
                         </td>
                     </tr>
                     {% endfor %}
