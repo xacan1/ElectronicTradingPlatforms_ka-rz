@@ -336,9 +336,9 @@ def get_actual_tender_by_product_code(product_code, get_object_model=False):
 
 
 # поулчает данные о посте и тендерах(товарах)
-# only_last - определяет все записи получать или только последние
 # username - если указан, то получаем данные о ценах участника в этом аукционе, даже если они не лучшие
-def get_post_by_url(url_post, get_object_model=False, only_last=False, username=None):
+# select_records - выбор записей тендера: 0 - все записи, 1 - только первые, 2 - только последние
+def get_post_by_url(url_post, get_object_model=False, select_records=0, username=None):
     post_info = {'title': 'Статья не найдена', 'post': '---', 'author': '---', 'time_post': '---', 'time_start': '---',
                  'time_close': '---', 'contract_deadline': '---', 'is_published': False, 'tenders': [],
                  'tenders_of_user': []}
@@ -357,14 +357,10 @@ def get_post_by_url(url_post, get_object_model=False, only_last=False, username=
             post_info['contract_deadline'] = result.contract_deadline
             post_info['url_post'] = result.url_post
             post_info['is_published'] = result.is_published
+            post_info['tenders'] = get_tenders_by_url_post(url_post, get_object_model, select_records)
 
             if username:
                 post_info['tenders_of_user'] = get_last_prices_of_tender_by_user(url_post, username)
-
-            if only_last:
-                post_info['tenders'] = get_last_tenders(url_post, get_object_model)
-            else:
-                post_info['tenders'] = get_tenders_by_url_post(url_post, get_object_model)
 
             if get_object_model:
                 post_info['object_model'] = result
@@ -376,60 +372,29 @@ def get_post_by_url(url_post, get_object_model=False, only_last=False, username=
     return post_info
 
 
-# ищет тендеры для поста(с ценами всех участников), без даты так как url уникальный
-# возвращает список словарей с товарами и ценами
-def get_tenders_by_url_post(url_post, get_object_model=False):
+# получает записи о тендерах
+# select_records - выбор записей тендера: 0 - все записи, 1 - только первые, 2 - только последние
+def get_tenders_by_url_post(url_post, get_object_model=False, select_records=2):
     tenders_info = []
     tender_info = {'id': 0, 'quantity': 0, 'price': 0, 'step_price': 0, 'time_bet': 0, 'product_code': '',
                    'product_name': '', 'unit': '', 'owner_price_username': '', 'owner_price_inn': ''}
     try:
-        query = db.session.query(Tenders).join(Posts, Posts.id == Tenders.post_id).filter(Posts.url_post == url_post)
-        result = query.first()
+        if select_records > 0:
+            query = db.session.query(Tenders)
+            query = query.join(Goods, Goods.id == Tenders.product_id)
+            query = query.join(Posts, Posts.id == Tenders.post_id)
+            query = query.filter(Posts.url_post == url_post)
 
-        if result is not None:
-            tenders = query.all()
+            if select_records == 2:
+                query = query.order_by(Goods.product_code, func.min(Tenders.price))
+            else:
+                query = query.order_by(Goods.product_code, func.max(Tenders.price))
 
-            for tender in tenders:
-                tender_info['id'] = tender.id
-                tender_info['quantity'] = tender.quantity
-                tender_info['price'] = tender.price
-                tender_info['rate_vat'] = tender.rate_vat
-                tender_info['step_price'] = tender.step_price
-                # tender_info['time_bet'] = tender.time_bet
-                # tender_info['post'] = tender.post
-                tender_info['product_code'] = tender.product.product_code
-                tender_info['product_name'] = tender.product.product_name
-                tender_info['unit'] = tender.product.unit
-                # tender_info['owner_price'] = tender.owner_price
-                tender_info['owner_price_username'] = tender.owner_price.username
-                tender_info['owner_price_inn'] = tender.owner_price.inn
-
-                if get_object_model:
-                    tender_info['object_model'] = tender
-
-                tenders_info.append(tender_info.copy())
+            query = query.group_by(Goods.product_code)
         else:
-            tenders_info.append(tender_info)
+            query = db.session.query(Tenders).join(Posts, Posts.id == Tenders.post_id).filter(
+                Posts.url_post == url_post)
 
-    except exc.SQLAlchemyError as exp:
-        tenders_info.append(tender_info)
-        print(f'Ошибка при запросе к БД: {str(exp)}')
-
-    return tenders_info
-
-
-# получает только последние(актуальные) по времени тендера и с минимальной ценой
-def get_last_tenders(url_post, get_object_model=False):
-    tenders_info = []
-    tender_info = {'id': 0, 'quantity': 0, 'price': 0, 'step_price': 0, 'time_bet': 0, 'product_code': '',
-                   'product_name': '', 'unit': '', 'owner_price_username': '', 'owner_price_inn': ''}
-    try:
-        query = db.session.query(Tenders)
-        query = query.join(Goods, Goods.id == Tenders.product_id)
-        query = query.join(Posts, Posts.id == Tenders.post_id)
-        query = query.filter(Posts.url_post == url_post)
-        query = query.order_by(Goods.product_code, func.min(Tenders.price))
-        query = query.group_by(Goods.product_code)
         result = query.first()
 
         if result is not None:
@@ -507,7 +472,7 @@ def get_last_prices_of_tender_by_user(url_post, username):
 
 # получает всех участников тендера в порядке времени начала участия
 # для восстановления порядковых номеров как во время торгов
-def get_all_users_in_tender(url_post):
+def get_all_users_in_tender(url_post: str):
     users_tender = {}
 
     try:
@@ -807,7 +772,8 @@ def add_or_update_tender(product_code, client_price, url_post, username):
 # здесь только проверяем цены и решаем стоит ли обновлять их в тендере
 # list_of_new_prices - список с новыми ценами из формы тендера на сайте
 # tenders_info - список словарей с данными о текущем тендере из БД
-def check_new_price(url_post, tenders_info, list_of_new_prices, username, time_close):
+# increase_time_tender - время на котрое нужно продлить торги если кто то сделал ставку в самом конце торгов
+def check_new_price(url_post, tenders_info, list_of_new_prices, username, time_close, increase_time_tender):
     text_result = 'Ваши новые цены приняты сервером!'
     result = True
     errors_code_product = []  # тут сохраним все коды товаров которые не прошли по цене
@@ -837,10 +803,10 @@ def check_new_price(url_post, tenders_info, list_of_new_prices, username, time_c
                     # то добавим к времени закрытия торгов еще 10 минут
                     time_until_closing = (time_close - datetime.utcnow()).total_seconds()
 
-                    if 0 < time_until_closing < 600:
+                    if 0 < time_until_closing < increase_time_tender:
                         post_info = get_post_by_url(url_post, True)
                         post = post_info.get('object_model')
-                        post.time_close = post_info['time_close'] + timedelta(seconds=600)
+                        post.time_close = post_info['time_close'] + timedelta(seconds=increase_time_tender)
                         db.session.commit()
                 break
 
@@ -985,6 +951,36 @@ def get_list_posts(page, posts_per_page, only_active=False, not_published=False)
         print('Нет ни одного поста')
 
     return page_of_posts
+
+
+# возвращает список email участников и инфу о закрытых торгах за определенный интервал времени для уведомлений
+def get_info_closed_tenders_by_interval_time(time_interval: int):
+    print(f'Checked! {str(time_interval)}')
+    tenders_and_users = []
+    tender_and_user = {'user_email': '', 'url_post': '', 'title': ''}
+    now = datetime.utcnow()
+    delta_now = now - timedelta(seconds=time_interval)
+    try:
+        query = db.session.query(Users, Posts)
+        query = query.join(Tenders, Users.id == Tenders.owner_price_id)
+        query = query.join(Posts, Tenders.post_id == Posts.id)
+        query = query.filter(and_(Posts.time_close > delta_now, Posts.time_close < now))
+        query = query.group_by(Posts.url_post, Users.email)
+
+        if query.first() is not None:
+            results = query.all()
+
+            for result in results:
+                tender_and_user['user_email'] = result.Users.email
+                tender_and_user['url_post'] = result.Posts.url_post
+                tender_and_user['title'] = result.Posts.title
+                # print(url_for('show_tender', url_post=result.Posts.url_post))
+                tenders_and_users.append(tender_and_user.copy())
+
+    except exc.SQLAlchemyError as exp:
+        print(f'Ошибка при поиске закрытых торгов {str(exp)}')
+
+    return tenders_and_users
 
 
 def create_site_db():

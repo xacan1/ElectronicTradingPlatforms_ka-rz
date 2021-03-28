@@ -14,9 +14,13 @@ from forms import LoginForm, RegistrationForm, AddEditPostForm, TenderForm, Pass
     EditProfileForm, UploadFilesForm
 from login_secure import login_user, logout_user, get_authorization
 from send_email import EmailSender
+from task_scheduler import TaskScheduller
 
-title = 'АО «КАРЗ»'
+title = app.config.get('NAME_COMPANY')
 admin_initialization(admin_panel)
+app_shcheduller = TaskScheduller(app.config.get('SCHEDULER_INTERVAL'), app.config.get('MAIL_USERNAME'),
+                                 app.config.get('MAIL_PASSWORD'), app.config.get('NAME_COMPANY'))
+app_shcheduller.start_schedule()
 
 
 @app.before_request
@@ -127,7 +131,7 @@ def show_post(url_post=None):
     page = None
     current_user = get_authorization()
     current_year = datetime.now().year
-    post_info = models.get_post_by_url(url_post, False, True, current_user.get('username'))
+    post_info = models.get_post_by_url(url_post, False, 1, current_user.get('username'))
 
     if not post_info['tenders']:
         page = redirect(url_for('list_tenders'))
@@ -150,7 +154,7 @@ def show_result_tender(url_post=None):
         page = redirect(url_for('login'))
 
     users_tender = models.get_all_users_in_tender(url_post)
-    post_info = models.get_post_by_url(url_post, False, True, current_user.get('username'))
+    post_info = models.get_post_by_url(url_post, False, 2, current_user.get('username'))
     post_info['today'] = models.from_utc0_to_localtime(post_info['today'], current_user.get('timezone'))
     post_info['time_start_local'] = models.from_utc0_to_localtime(post_info['time_start'], current_user.get('timezone'))
     post_info['time_close_local'] = models.from_utc0_to_localtime(post_info['time_close'], current_user.get('timezone'))
@@ -553,7 +557,7 @@ def edit_tender(url_post):
 
     else:
         # если страница просто обновлена, то перезаполним данные формы
-        post_info = models.get_post_by_url(url_post, False, True)
+        post_info = models.get_post_by_url(url_post, False, 2)
         form_add_edit_tender.title_tender.data = post_info['title']
         form_add_edit_tender.time_start.data = models.from_utc0_to_localtime(post_info['time_start'],
                                                                              current_user['timezone'])
@@ -599,7 +603,7 @@ def show_tender(url_post):
     if not current_user.get('username'):
         page = redirect(url_for('login'))
     else:
-        post_info = models.get_post_by_url(url_post, False, True)
+        post_info = models.get_post_by_url(url_post, False, 2)
 
         if not post_info['tenders']:
             page = redirect(url_for('list_tenders'))
@@ -614,7 +618,8 @@ def show_tender(url_post):
 
                 if current_user.get('access') == 0:
                     result, msg = models.check_new_price(url_post, post_info.get('tenders'), list_of_new_prices,
-                                                         current_user.get('username'), post_info.get('time_close'))
+                                                         current_user.get('username'), post_info.get('time_close'),
+                                                         app.config.get('INCREASE_OF_TIME_AT_NEW_BET'))
                 elif not current_user.get('confirmed'):
                     result = False
                     msg = 'Для участия в торгах требуется подтверждение учетной записи администратором!'
@@ -650,7 +655,7 @@ def api_post(api_method):
         response_JSON = json.dumps(tenders_info)
     elif api_method == 'upload_tender_from_1c' and token == app.config.get('TOKEN_API') and request.data:
         tender_data = request.get_json()  # json.loads(request.data)  # распарсим тело запроса в словарь
-        post_info = models.get_post_by_url(tender_data.get('url_post'), False, True)
+        post_info = models.get_post_by_url(tender_data.get('url_post'), False, 2)
         contract_deadline = datetime.strptime(tender_data.get('contract_deadline'), '%d%m%Y%H%M%S')
         time_start = datetime.strptime(tender_data.get('time_start'), '%d%m%Y%H%M%S')
         time_close = datetime.strptime(tender_data.get('time_close'), '%d%m%Y%H%M%S')
@@ -695,7 +700,7 @@ def api_get(api_method, url_post=None):
 
         username = 'ADMINISTRATOR'
         user_info = models.get_info_by_username(username, False)
-        post_info = models.get_post_by_url(url_post, False, True)
+        post_info = models.get_post_by_url(url_post, False, 2)
 
         if post_info['tenders']:
             post_info['time_post'] = models.from_utc0_to_localtime(post_info['time_post'],

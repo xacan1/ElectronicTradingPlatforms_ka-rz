@@ -5,7 +5,7 @@ from email.mime.multipart import MIMEMultipart
 
 
 class EmailSender:
-    def __init__(self, login, password, addr_to, subject, sender_name):
+    def __init__(self, login: str, password: str, addr_to: str, subject: str, sender_name: str):
         self.port = 465
         self.smtp_server = 'smtp.yandex.ru'
         self.login = login
