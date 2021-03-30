@@ -634,9 +634,9 @@ def show_tender(url_post):
 
                 return redirect(url_for('show_tender', url_post=url_post))
 
-            page = render_template('tender.html', title=f"Закупки по тендеру {post_info.get('title')}",
-                                   title_page=f"Закупки по тендеру {post_info.get('title')}", post_info=post_info,
-                                   current_user=current_user, form=form_tender, current_year=current_year)
+            page = render_template('tender.html', title=post_info.get('title'), title_page=post_info.get('title'),
+                                   post_info=post_info, current_user=current_user, form=form_tender,
+                                   current_year=current_year)
 
     return page
 
@@ -698,7 +698,7 @@ def api_get(api_method, url_post=None):
             response_JSON = json.dumps(response_api, ensure_ascii=False)
             return response_JSON
 
-        username = 'ADMINISTRATOR'
+        username = 'Administrator'
         user_info = models.get_info_by_username(username, False)
         post_info = models.get_post_by_url(url_post, False, 2)
 
