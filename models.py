@@ -141,6 +141,7 @@ class Files(db.Model):
 def add_user_in_db(username, email, psw, phone, company, inn, user_timezone, confirmation_code):
     text_result = 'Новый пользователь успешно добавлен'
     addition_result = (True, text_result)
+    username = username.lower()
     try:
         if db.session.query(Users).filter(Users.username == username).first() is not None:
             text_result = 'Пользователь с таким логином уже существует!'
