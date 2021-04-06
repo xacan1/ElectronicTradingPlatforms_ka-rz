@@ -356,6 +356,11 @@ function show_countdown_timer(final_time)
     let time_close_tender = document.getElementById('label_time_close');
     let time_to_close = new Date(final_time);
     time_to_close = time_to_close - current_date;
+
+    if (time_to_close <= 0) {
+        location.reload();
+    }
+
     time_close_tender.innerHTML = 'До закрытия торгов: ' + format_time(time_to_close);
 }
 //преобразование миллисекунд в формат ч:м:с

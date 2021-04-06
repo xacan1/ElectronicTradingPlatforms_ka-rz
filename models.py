@@ -955,7 +955,7 @@ def get_list_posts(page, posts_per_page, only_active=False, not_published=False)
 
 # возвращает список email участников и инфу о закрытых торгах за определенный интервал времени для уведомлений
 def get_info_closed_tenders_by_interval_time(time_interval: int):
-    print(f'Checked! {str(time_interval)}')
+    # print(f'Checked! {str(time_interval)}')
     tenders_and_users = []
     tender_and_user = {'user_email': '', 'url_post': '', 'title': ''}
     now = datetime.utcnow()
