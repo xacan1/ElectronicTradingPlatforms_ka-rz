@@ -29,9 +29,9 @@ class TaskScheduller:
                 <p>{self.name_company}</p>
                 <p>Внимание, данное сообщение сформировано автоматически и не требует ответа.</p>
                 """
-
                 email_sender = EmailSender(self.mail_login, self.mail_password, tender_and_user.get('user_email'),
                                            'Уведомление об аукционе на ka-rz.ru', 'team.ka-rz.ru')
+                time.sleep(61)
                 email_sender.send_message(message)
 
     def start_schedule(self):
