@@ -698,7 +698,7 @@ def api_get(api_method, url_post=None):
             response_JSON = json.dumps(response_api, ensure_ascii=False)
             return response_JSON
 
-        username = 'Administrator'
+        username = 'administrator'
         user_info = models.get_info_by_username(username, False)
         post_info = models.get_post_by_url(url_post, False, 2)
 

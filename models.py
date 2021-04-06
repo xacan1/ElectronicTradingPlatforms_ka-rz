@@ -170,6 +170,7 @@ def get_info_by_username(username, get_object_model=False):
     user_info = {'id': 0, 'psw': '', 'access': 0, 'email': '', 'reg_time': 0, 'phone': '', 'company': '', 'inn': '',
                  'timezone': 0, 'confirmation_code': 1}
     try:
+        username = username.lower()
         query = db.session.query(Users).filter(Users.username == username)
         result = query.first()
 
@@ -197,6 +198,7 @@ def get_info_by_email(email, get_object_model=False):
     user_info = {'id': 0, 'psw': '', 'access': 0, 'username': '', 'reg_time': 0, 'phone': '', 'company': '', 'inn': '',
                  'timezone': 0}
     try:
+        email = email.lower()
         query = db.session.query(Users).filter(Users.email == email)
         result = query.first()
 
@@ -242,8 +244,10 @@ def update_password(new_psw, email='', username=''):
 
     try:
         if email:
+            email = email.lower()
             user_info = get_info_by_email(email, True)
         else:
+            username = username.lower()
             user_info = get_info_by_username(username, True)
 
         if user_info.get('id') > 0:
