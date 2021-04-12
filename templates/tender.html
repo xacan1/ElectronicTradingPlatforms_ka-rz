@@ -122,11 +122,22 @@
                     {% endfor %}
                     </tbody>
                 </table>
-                <p>{{ form.submit(class='pure-button') }}</p>
+                <p>{{ form.submit(class='pure-button hidden') }}
+                </p>
             </form>
-            <button class="pure-button" onclick="window.location.href = '{{ url_for('list_tenders') }}';">Вернуться к
-                списку
-            </button>
+            <div class="block-buttons">
+                <div>
+                    <button class="pure-button" onclick="window.location.href = '{{ url_for('list_tenders') }}';">
+                        Вернуться к списку
+                    </button>
+                </div>
+                <div class="side-right">
+                    <button class="pure-button"
+                            onclick="if (confirm('Утвердить новые цены?')) { document.getElementById('submit').click() } else { return False };">
+                        Утвердить новые цены
+                    </button>
+                </div>
+            </div>
         </div>
         {% elif post_info['today'] > post_info['time_close'] %}
         <div>

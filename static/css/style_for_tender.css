@@ -39,11 +39,19 @@ caption{
 #label_current_summ_tender,#label_server_summ_tender,#label_time_close{
     font-weight: bold;
 }
-.hide-column{
+.hide-column,.hidden{
     display: none;
 }
 tbody tr:hover,tbody tr:nth-child(even):hover{
     background: #FFF7D1;
+}
+.block-buttons{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr;
+}
+.side-right{
+    justify-self: end;
 }
 /*table.paleBlueRows tr td.max-width-column{
   max-width: 20%;
