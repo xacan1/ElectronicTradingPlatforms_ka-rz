@@ -617,8 +617,7 @@ def add_post_in_db(title, text_post, username, contract_deadline, time_start, ti
 
 def update_post_and_tender(title, text_post, username, contract_deadline, time_start, time_close, is_published,
                            list_of_products_new, url_post):
-    text_result = 'Изменения записаны.'
-    addition_result = (True, text_result)
+    addition_result = (True, 'Изменения записаны.')
     user_info = get_info_by_username(username, True)
     author = user_info.get('object_model')
     # начало и закрытие торгов указываем в местном времени значит нужно его привести к UTC +0 в БД
@@ -633,7 +632,7 @@ def update_post_and_tender(title, text_post, username, contract_deadline, time_s
         post_info = get_post_by_url(url_post, True)
         post = post_info.get('object_model')
 
-        if post is not None:
+        if post is not None and post.time_start > now:
             post.title = title
             post.time_post = now
             post.time_start = time_start
@@ -664,11 +663,12 @@ def update_post_and_tender(title, text_post, username, contract_deadline, time_s
                 db.session.add(tender)
 
             db.session.commit()
+        else:
+            addition_result = (False, 'Нельзя изменять начавшийся или прошедший тендер')
 
     except exc.SQLAlchemyError as exp:
         db.session.rollback()
-        text_result = f'Ошибка изменения статьи и тендеров в БД: {str(exp)}'
-        addition_result = (False, text_result)
+        addition_result = (False, f'Ошибка изменения статьи и тендеров в БД: {str(exp)}')
 
     return addition_result
 
