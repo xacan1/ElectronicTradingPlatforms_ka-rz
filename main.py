@@ -116,14 +116,13 @@ def list_tenders():
 
     posts = models.get_list_posts(page, app.config.get('POSTS_PER_PAGE'), only_active, not_published)
     announcements = posts.items if posts else []
-    next_url = url_for('list_tenders', not_published=not_published, only_active=only_active,
-                       page=posts.next_num) if posts and posts.has_next else None
-    prev_url = url_for('list_tenders', not_published=not_published, only_active=only_active,
-                       page=posts.prev_num) if posts and posts.has_prev else None
+    # next_url = url_for('list_tenders', not_published=not_published, only_active=only_active,
+    #                    page=posts.next_num) if posts and posts.has_next else None
+    # prev_url = url_for('list_tenders', not_published=not_published, only_active=only_active,
+    #                    page=posts.prev_num) if posts and posts.has_prev else None
 
     return render_template('list_tenders.html', title='Анонсы тендеров', title_page='Анонсы тендеров',
-                           current_user=current_user, announcements=announcements, next_url=next_url, prev_url=prev_url,
-                           current_year=current_year)
+                           current_user=current_user, announcements=announcements, posts=posts)
 
 
 @app.route('/list_tenders/<url_post>')
