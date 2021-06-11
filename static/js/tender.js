@@ -106,7 +106,7 @@ function check_price_step()
         let price_step = str_to_number(table.rows[j].cells[num_price_step].innerHTML, 'int');
         let client_price = str_to_number(table.rows[j].cells[num_new_user_price].childNodes[1].value, 'float');
         let server_price = str_to_number(table.rows[j].cells[num_server_price].innerHTML, 'float');
-        if (Math.abs(server_price - client_price) < price_step) {
+        if (Math.abs(server_price - client_price) < price_step || Math.abs(server_price - client_price) % price_step != 0) {
             table.rows[j].cells[num_new_user_price].childNodes[1].value = server_price;
         }
     }

@@ -182,13 +182,13 @@ def login():
     if current_user['username']:
         page = redirect(url_for('profile', username=current_user['username']))
     elif form_login.validate_on_submit():
-        username = form_login.username.data
+        username = form_login.username.data.lower()
 
-        if '@' in form_login.username.data:
-            user_info = models.get_info_by_email(form_login.username.data)
+        if '@' in username:
+            user_info = models.get_info_by_email(username)
             username = user_info.get('username')
         else:
-            user_info = models.get_info_by_username(form_login.username.data)
+            user_info = models.get_info_by_username(username)
 
         pass_ok = check_password_hash(user_info['psw'], form_login.psw.data)
 
@@ -227,7 +227,8 @@ def registration():
         else:
             hash_psw = generate_password_hash(form_registration.psw.data)
             confirmation_code = random.randint(100000, 999999)
-            result, msg = models.add_user_in_db(form_registration.username.data, form_registration.email.data, hash_psw,
+            result, msg = models.add_user_in_db(form_registration.username.data.lower(),
+                                                form_registration.email.data.lower(), hash_psw,
                                                 form_registration.phone.data, form_registration.company.data,
                                                 form_registration.inn.data, form_registration.user_timezone.data,
                                                 confirmation_code)
@@ -292,7 +293,7 @@ def password_recovery():
     form_password_recovery = PasswordRecoveryForm()
 
     if form_password_recovery.validate_on_submit():
-        email = form_password_recovery.email.data
+        email = form_password_recovery.email.data.lower()
         new_password = str(random.randint(1, 9)).join(random.choices(string.ascii_lowercase + string.digits, k=3))
         hash_psw = generate_password_hash(new_password)
         user_info = models.get_info_by_email(email, True)

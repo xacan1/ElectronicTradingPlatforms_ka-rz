@@ -141,7 +141,7 @@ class Files(db.Model):
 def add_user_in_db(username, email, psw, phone, company, inn, user_timezone, confirmation_code):
     text_result = 'Новый пользователь успешно добавлен'
     addition_result = (True, text_result)
-    username = username.lower()
+
     try:
         if db.session.query(Users).filter(Users.username == username).first() is not None:
             text_result = 'Пользователь с таким логином уже существует!'
@@ -170,7 +170,6 @@ def get_info_by_username(username, get_object_model=False):
     user_info = {'id': 0, 'psw': '', 'access': 0, 'email': '', 'reg_time': 0, 'phone': '', 'company': '', 'inn': '',
                  'timezone': 0, 'confirmation_code': 1}
     try:
-        username = username.lower()
         query = db.session.query(Users).filter(Users.username == username)
         result = query.first()
 
@@ -198,7 +197,6 @@ def get_info_by_email(email, get_object_model=False):
     user_info = {'id': 0, 'psw': '', 'access': 0, 'username': '', 'reg_time': 0, 'phone': '', 'company': '', 'inn': '',
                  'timezone': 0}
     try:
-        email = email.lower()
         query = db.session.query(Users).filter(Users.email == email)
         result = query.first()
 
@@ -244,10 +242,8 @@ def update_password(new_psw, email='', username=''):
 
     try:
         if email:
-            email = email.lower()
             user_info = get_info_by_email(email, True)
         else:
-            username = username.lower()
             user_info = get_info_by_username(username, True)
 
         if user_info.get('id') > 0:
@@ -811,7 +807,8 @@ def check_new_price(url_post, tenders_info, list_of_new_prices, username, time_c
                     if 0 < time_until_closing < increase_time_tender:
                         post_info = get_post_by_url(url_post, True)
                         post = post_info.get('object_model')
-                        post.time_close = post_info['time_close'] + timedelta(seconds=increase_time_tender)
+                        time_close = post_info['time_close'] + timedelta(seconds=increase_time_tender)
+                        post.time_close = time_close
                         db.session.commit()
                 break
 
