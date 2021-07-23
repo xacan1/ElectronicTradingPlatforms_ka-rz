@@ -15,6 +15,13 @@
     <noscript class="warning-noscript">
         Ваш браузер не поддерживает JavaScript или поддержка отключена в настройках.
     </noscript>
+    {% if not current_user['access'] %}
+    <p>У вас нет прав для просмотра. Данная страница доступна только администратору.</p>
+    {% elif post_info['today'] > post_info['time_start_local'] and post_info['today'] < post_info['time_close_local'] %}
+    <p>Торги еще не завершены</p>
+    {% elif post_info['today'] < post_info['time_start_local'] %}
+    <p>Торги еще не начались</p>
+    {% else %}
     <h1 class="title-post">
         {{ post_info['title'] }}
     </h1>
@@ -55,17 +62,14 @@
                 {% else %}
                 <th class="hide-column">Код</th>
                 {% endif %}
-                <th class="max-width-column">Наименование</th>
+                <th>Наименование</th>
                 <th>Количество</th>
                 <th>Ед. изм.</th>
-                {% if current_user['access'] or post_info['today'] < post_info['time_close'] %}
                 <th>Цена</th>
-                {% endif %}
-                <th>НДС,%</th>
+                <th class="hide-column">НДС,%</th>
                 <th>Шаг цены</th>
-                {% if current_user['access'] %}
+                <th>Сумма</th>
                 <th>Участник</th>
-                {% endif %}
             </tr>
             </thead>
             <tbody>
@@ -77,50 +81,27 @@
                 {% else %}
                 <td class="string-field hide-column">{{ row.product_code }}</td>
                 {% endif %}
-                <td class="string-field max-width-column">{{ row.product_name }}</td>
+                <td class="string-field">{{ row.product_name }}</td>
                 <td class="digit-field">{{ row.quantity }}</td>
                 <td class="neitral-field">{{ row.unit }}</td>
-                {% if current_user['access'] or post_info['today'] < post_info['time_close'] %}
+                {% if current_user['access'] or post_info['tenders_of_user'] or post_info['today'] <
+                post_info['time_close'] %}
                 <td class="digit-field number-format no-wrap">{{ '%.2f'|format(row.price) }}</td>
                 {% endif %}
-                <td class="digit-field">{{ row.rate_vat }}</td>
+                <td class="digit-field hide-column">{{ row.rate_vat }}</td>
                 <td class="digit-field number-format">{{ '%.2f'|format(row.step_price) }}</td>
-                {% if current_user['access'] %}
-                <td class="string-field">{{ row.owner_price_username }}</td>
-                {% endif %}
+                <td class="digit-field number-format no-wrap">{{ '%.2f'|format(row.price * row.quantity) }}</td>
+                <td class="string-field">{{ row.owner_price_company }}</td>
             </tr>
             {% endfor %}
             </tbody>
         </table>
     </div>
+    {% endif %}
     <p>
         <button class="pure-button" onclick="window.location.href = '{{ url_for('list_tenders') }}';">
             Вернуться к списку
         </button>
-        <button class="pure-button"
-                onclick="window.location.href = '{{ url_for('show_tender', url_post=post_info['url_post']) }}';">
-            Перейти к торгам
-        </button>
-        {% if current_user['access'] or post_info['tenders_of_user'] or post_info['today'] > post_info['time_close'] %}
-        <button class="pure-button"
-                onclick="window.location.href = '{{ url_for('show_result_tender', url_post=post_info['url_post']) }}';">
-            Результаты торгов
-        </button>
-        {% endif %}
-        {% if current_user['access'] %}
-        <button class="pure-button"
-                onclick="window.location.href = '{{ url_for('show_history_tender', url_post=post_info['url_post']) }}';">
-            История торгов
-        </button>
-        <button class="pure-button"
-                onclick="window.location.href = '{{ url_for('edit_tender', url_post=post_info['url_post']) }}';">
-            Редактировать тендер
-        </button>
-        <button class="pure-button"
-                onclick="if (confirm('Удалить тендер?')) { window.location.href = '{{ url_for('delete_tender', url_post=post_info['url_post']) }}' } else { return False };">
-            Удалить тендер
-        </button>
-        {% endif %}
     </p>
 </div>
 <script src="{{ url_for('static', filename='js/format_data_on_page.js') }}"></script>

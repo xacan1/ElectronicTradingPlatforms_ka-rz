@@ -172,6 +172,27 @@ def show_result_tender(url_post=None):
     return page
 
 
+@app.route('/history_tenders/<url_post>')
+def show_history_tender(url_post=None):
+    page = None
+    current_user = get_authorization()
+    current_year = datetime.now().year
+
+    if not current_user.get('username'):
+        page = redirect(url_for('login'))
+
+    post_info = models.get_post_by_url(url_post, False, 0, None)
+    post_info['today'] = models.from_utc0_to_localtime(post_info['today'], current_user.get('timezone'))
+    post_info['time_start_local'] = models.from_utc0_to_localtime(post_info['time_start'], current_user.get('timezone'))
+    post_info['time_close_local'] = models.from_utc0_to_localtime(post_info['time_close'], current_user.get('timezone'))
+
+    if not page:
+        page = render_template('history_tender.html', post_info=post_info, title='История торгов',
+                               itle_page='История торгов', current_user=current_user, current_year=current_year)
+
+    return page
+
+
 @app.route('/login', methods=['POST', 'GET'])
 def login():
     page = None

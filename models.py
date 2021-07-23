@@ -394,7 +394,7 @@ def get_tenders_by_url_post(url_post, get_object_model=False, select_records=2):
             query = query.group_by(Goods.product_code)
         else:
             query = db.session.query(Tenders).join(Posts, Posts.id == Tenders.post_id).filter(
-                Posts.url_post == url_post)
+                Posts.url_post == url_post).order_by(Tenders.product_id, Tenders.price.desc())
 
         result = query.first()
 
@@ -414,6 +414,7 @@ def get_tenders_by_url_post(url_post, get_object_model=False, select_records=2):
                 tender_info['owner_price_access'] = tender.owner_price.access
                 tender_info['owner_price_username'] = tender.owner_price.username
                 tender_info['owner_price_inn'] = tender.owner_price.inn
+                tender_info['owner_price_company'] = tender.owner_price.company
 
                 if get_object_model:
                     tender_info['object_model'] = tender
