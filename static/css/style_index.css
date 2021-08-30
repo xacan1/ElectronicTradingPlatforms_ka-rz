@@ -10,7 +10,7 @@
     height: 100%;
 }
 /* для Mozilla иначе он не поймет какаю ширину выставить для слайдера */
-.swiper-container {
+.swiper{
   max-width: 100vw;
 }
 .services{
